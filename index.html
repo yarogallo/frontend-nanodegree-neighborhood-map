@@ -6,23 +6,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/normalize.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pangolin" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-    <section id="page">
-        <section id="">
-            <header id="map-header">
-                <h1>My Favorite Places in San Francisco</h1>
-                <button>Edit</button>
-            </header>
-            <div id="map">
+    <section class="container">
+        <header id="map-header" class="row flex background-black">
+            <div id="edit-buttom-container" class="col-4">
+                <a href="#" class="entypo-list big-font"></a>
+            </div>
+            <div id="title-container" class="col-8 text-right">
+                <h1 class="big-font">San Francisco Places</h1>
+            </div>
+        </header>
+        <div id="map-container" class="row relative">
+            <div id="list-container" class="background-black">
+                <form class="flex">
+                    <input id="input-place" type="text" placeholder="reduce places">
+                    <button class="background-blue fontawesome-filter"> filter</button>
+                </form>
+                <ul>
+
+                </ul>
+            </div>
+
+            <div id="map" class="col-8">
 
             </div>
-            <footer id="map-footer">
-
-            </footer>
-        </section>
+        </div>
+        <footer id="map-footer" class="row background-black">
+            <div id="personal-info-container" class="col-12 text-center">
+                <p class="space-bottom">Created by: Yanisleidi Rodriguez</p>
+                <p class="space-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
+            </div>
+        </footer>
     </section>
 </body>
 
