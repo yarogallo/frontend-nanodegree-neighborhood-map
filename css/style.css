@@ -1,0 +1,122 @@
+@import url(http://weloveiconfonts.com/api/?family=entypo|fontawesome);
+[class*="entypo-"]:before {
+    font-family: 'entypo', sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+[class*="fontawesome-"]:before {
+    font-family: 'FontAwesome', sans-serif;
+}
+
+html,
+body {
+    font-family: 'Pangolin', cursive;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+}
+
+li {
+    list-style-type: none;
+}
+
+input {
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+button {
+    padding: 5px;
+    border-radius: 0;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#list-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+#map-container {
+    height: 600px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.row {
+    width: 100%;
+}
+
+.col-4 {
+    width: 25%;
+}
+
+.col-6 {
+    width: 50%;
+}
+
+.col-8 {
+    width: 75%;
+}
+
+.col-12 {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+    display: -webkit-flex;
+}
+
+.dir-column {
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.space-between {
+    padding: 10px 0;
+}
+
+.space-around {
+    padding: 10px;
+}
+
+.space-bottom {
+    padding-bottom: 5px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.big-font {
+    font-size: 2em;
+}
+
+.background-black {
+    background-color: rgb(0, 0, 0);
+}
+
+.background-blue {
+    background-color: rgb(0, 128, 255);
+}
+
+.relative {
+    position: relative;
+}
