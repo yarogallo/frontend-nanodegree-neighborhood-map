@@ -26,8 +26,8 @@
                     <input id="input-place" type="text" placeholder="Places">
                     <button class="background-blue fontawesome-filter"> filter</button>
                 </form>
-                <ul>
-
+                <ul data-bind="foreach: myPlaces">
+                    <li data-bind="text: $data.name, click: $parent.clickedPlaceList" class="place fontawesome-heart">-</li>
                 </ul>
             </div>
 
@@ -39,11 +39,18 @@
             <div id="personal-info-container" class="col-12 text-center space-around">
                 <p class="space-bottom">Created by: Yanisleidi Rodriguez</p>
                 <p class="space-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
+                <p class="space-bottom">Map icon made by: <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
+                        title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
             </div>
         </footer>
     </section>
-    <script src="js/mapaView.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=window.map.initMap" async defer></script>
+    <script src="js/Knockout.js"></script>
+    <script src="js/mapView.js"></script>
+    <script src="js/listView.js"></script>
+    <script src="js/placesModel.js"></script>
+    <script src="js/placeDetailModel.js"></script>
+    <script src="js/viewModel.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
 
 
 </body>
