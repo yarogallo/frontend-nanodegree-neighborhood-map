@@ -24,10 +24,17 @@
             <div id="list-container" class="background-black space-around">
                 <form class="flex">
                     <input id="input-place" type="text" placeholder="Places">
-                    <button class="background-blue fontawesome-filter"> filter</button>
+                    <button id="menu-button" class="background-blue fontawesome-filter"> filter</button>
                 </form>
                 <ul data-bind="foreach: myPlaces">
-                    <li data-bind="text: $data.name, click: $parent.clickedPlaceList" class="place fontawesome-heart">-</li>
+                    <li class="space-bottom place">
+
+                        <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.deletePlace"></button>
+                        <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfo"></button>
+                        <h4>
+                            <span data-bind="text: $data.name, event: {click: $parent.openAsociateInfoWindow, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span> 
+                        </h4>  
+                    </li>
                 </ul>
             </div>
 
