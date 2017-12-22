@@ -23,13 +23,13 @@
         <div id="map-container" class="row relative">
             <div id="list-container" class="background-black space-around">
                 <form class="flex">
-                    <input id="input-place" type="text" placeholder="Places">
+                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: filterPlaces">
                     <button id="menu-button" class="background-blue fontawesome-filter"> filter</button>
                 </form>
                 <ul data-bind="foreach: myPlaces">
                     <li class="space-bottom place">
 
-                        <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.deletePlace"></button>
+                        <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.removePlace"></button>
                         <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfo"></button>
                         <h4>
                             <span data-bind="text: $data.name, event: {click: $parent.openAsociateInfoWindow, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span> 

@@ -88,6 +88,7 @@ var mapView = (function() {
         setMarkerMap: setMarkerMap,
         bouncingMarker: bouncingMarker,
         stopBouncingMarker: stopBouncingMarker,
-        openInfoWindow: openInfoWindow
+        openInfoWindow: openInfoWindow,
+        removeMarkerMap: removeMarkerMap
     };
 })();

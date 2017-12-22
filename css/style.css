@@ -155,7 +155,6 @@ h4 {
 }
 
 .place:hover {
-    cursor: pointer;
     color: rgb(0, 128, 255);
 }
 
@@ -166,4 +165,8 @@ h4 {
 
 .place-button:hover {
     background-color: red;
+}
+
+.place-button:focus {
+    outline: 0px;
 }
