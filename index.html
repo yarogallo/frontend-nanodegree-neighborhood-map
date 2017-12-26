@@ -23,7 +23,7 @@
         <div id="map-container" class="row relative">
             <div id="list-container" class="background-black space-around">
                 <form class="flex">
-                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: filterPlaces">
+                    <input id="input-place" type="text" placeholder="Places">
                     <button id="menu-button" class="background-blue fontawesome-filter"> filter</button>
                 </form>
                 <ul data-bind="foreach: myPlaces">
@@ -42,20 +42,35 @@
 
             </div>
         </div>
-        <footer id="map-footer" class="row background-black">
-            <div id="personal-info-container" class="col-12 text-center space-around">
-                <p class="space-bottom">Created by: Yanisleidi Rodriguez</p>
-                <p class="space-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
-                <p class="space-bottom">Map icon made by: <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
-                        title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+        <div id="place-info-container" class="row relative background-black" data-bind="with: openPlace">
+            <header class="col-12">
+                <h1 data-bind="text: name"></h1>
+            </header>
+            <div id="articles-container" class="col-12" data-bind="foreach:links">
+                
+                    <a href="" data-bind="attr:{href: $data}"></a>
+              
             </div>
-        </footer>
+            <div id="images-container" class="col-12" data-bind="foreach:photos">
+                    <img src="" alt="" data-bind="attr:{src: $data}">
+            </div>
+            <footer></footer>
+        </div>
+            <footer id="map-footer" class="row background-black">
+                <div id="personal-info-container" class="col-12 text-center space-around">
+                    <p class="space-bottom">Created by: Yanisleidi Rodriguez</p>
+                    <p class="space-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
+                    <p class="space-bottom">Map icon made by: <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
+                            title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+                </div>
+            </footer>
     </section>
     <script src="js/Knockout.js"></script>
     <script src="js/mapView.js"></script>
     <script src="js/listView.js"></script>
-    <script src="js/placesModel.js"></script>
-    <script src="js/placeDetailModel.js"></script>
+    <script src="js/places.js"></script>
+    <script src="js/placeDetail.js"></script>
+    <script src="js/request.js"></script>
     <script src="js/viewModel.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
 

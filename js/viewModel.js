@@ -1,13 +1,12 @@
 const ViewModel = function() {
     let self = this;
     self.myPlaces = ko.observableArray([]);
-    self.openPlace = ko.observable(null);
-    self.filterPlaces = function(place) { console.log(place) };
+    self.openPlace = ko.observable();
 
     self.init = function() {
         self.map = mapView.init();
         placeDetailModel.init(self.map);
-        placesModel.MY_PLACES.forEach(place => {
+        places.MY_PLACES.forEach(place => {
             (function(place) {
                 mapView.setMarkerMap(place);
                 self.myPlaces.push(place);
@@ -30,6 +29,21 @@ const ViewModel = function() {
         };
         mapView.removeMarkerMap(place.placeId);
         self.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId });
+    };
+    self.showMoreInfo = function(place) {
+        let obj = {};
+
+        request.flickerPhotos(place, function(listPhotosUrl) { // arr urls
+            obj.name = place.name;
+            obj.photos = listPhotosUrl;
+            console.log(listPhotosUrl);
+        });
+
+        request.wikiLinks(place, function(listWikiLinks) {
+            obj.links = listWikiLinks;
+            self.openPlace(obj);
+        });
+
     };
 };
 

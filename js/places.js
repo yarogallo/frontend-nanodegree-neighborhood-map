@@ -1,4 +1,4 @@
-placesModel = (function() {
+places = (function() {
     const MY_PLACES = [{
         name: "Golden Gate Park",
         placeId: "ChIJY_dFYHKHhYARMKc772iLvnE",
@@ -7,7 +7,7 @@ placesModel = (function() {
             lng: -122.4862138
         }
     }, {
-        name: "Golden Gate Bridg",
+        name: "Golden Gate Bridge",
         placeId: "ChIJY5udcZCGhYARw6Vh3xj2V0Y",
         location: {
             lat: 37.8199882,
