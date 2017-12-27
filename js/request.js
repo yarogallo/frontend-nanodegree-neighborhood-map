@@ -8,6 +8,7 @@ request = (function() {
             return;
         };
         obj.name = place.name;
+        obj.placeId = place.placeId;
         makeHttpRequest(getWikiUrl(place.name), function(status, response) {
 
             obj.links = status !== 200 ? [] : JSON.parse(response)[3];

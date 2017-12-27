@@ -17,9 +17,9 @@ var mapView = (function() {
         return map;
     };
 
-    function setMarkerMap(place) {
+    function createMarkerMap(place) {
         if (markers[place.placeId]) {
-            markers[place.placeId].setMap(map);
+            showMarkerMap(place.placeId);
             return;
         }
         const markerOpt = {
@@ -83,12 +83,17 @@ var mapView = (function() {
         markers[placeId].setMap(null);
     };
 
+    function showMarkerMap(placeId) {
+        markers[placeId].setMap(map);
+    };
+
     return {
         init: init,
-        setMarkerMap: setMarkerMap,
+        createMarkerMap: createMarkerMap,
         bouncingMarker: bouncingMarker,
         stopBouncingMarker: stopBouncingMarker,
         openInfoWindow: openInfoWindow,
-        removeMarkerMap: removeMarkerMap
+        removeMarkerMap: removeMarkerMap,
+        showMarkerMap: showMarkerMap
     };
 })();
