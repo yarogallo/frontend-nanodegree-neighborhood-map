@@ -1,23 +1,21 @@
 request = (function() {
+    const requestedPlacesHash = {};
 
-    function flickerPhotos(place, doneCallback) {
-        makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
-            if (status !== 200) {
-                doneCallback([]);
-                return;
-            };
-            doneCallback(getUrlPhotos(response));
-        });
-    };
-
-    function wikiLinks(place, doneCallback) {
+    function moreInfo(place, doneCallback) {
+        const obj = {};
+        if (requestedPlacesHash[place.placeId]) {
+            doneCallback(requestedPlacesHash[place.placeId]);
+            return;
+        };
+        obj.name = place.name;
         makeHttpRequest(getWikiUrl(place.name), function(status, response) {
-            let result;
-            if (status !== 200) {
-                result = [];
-            };
-            result = JSON.parse(response)[3];
-            doneCallback(result);
+
+            obj.links = status !== 200 ? [] : JSON.parse(response)[3];
+
+            makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
+                obj.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
+                doneCallback(obj);
+            });
         });
     };
 
@@ -56,7 +54,6 @@ request = (function() {
         return photos;
     };
     return {
-        flickerPhotos: flickerPhotos,
-        wikiLinks: wikiLinks
+        moreInfo: moreInfo
     }
 })();
