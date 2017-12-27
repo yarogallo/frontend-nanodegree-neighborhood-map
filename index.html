@@ -32,7 +32,7 @@
                         <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.removePlace"></button>
                         <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfo"></button>
                         <h4>
-                            <span data-bind="text: $data.name, event: {click: $parent.openAsociateInfoWindow, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span> 
+                            <span data-bind="text: $data.name, event: {click: $parent.getPlaceDetail, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span> 
                         </h4>  
                     </li>
                 </ul>

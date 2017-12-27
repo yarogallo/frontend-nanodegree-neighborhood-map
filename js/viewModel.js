@@ -5,7 +5,7 @@ const ViewModel = function() {
 
     self.init = function() {
         self.map = mapView.init();
-        placeDetailModel.init(self.map);
+        placeDetail.init(self.map);
         places.MY_PLACES.forEach(place => {
             (function(place) {
                 mapView.setMarkerMap(place);
@@ -14,8 +14,8 @@ const ViewModel = function() {
         });
     };
 
-    self.openAsociateInfoWindow = function(place) {
-        self.getPlaceDetails(place.placeId, mapView.openInfoWindow);
+    self.getPlaceDetail = function(place) {
+        placeDetail.objDetail(place.placeId, mapView.openInfoWindow);
     };
     self.animateAsociateMarker = function(place) {
         mapView.bouncingMarker(place.placeId);
@@ -39,7 +39,7 @@ const ViewModel = function() {
             obj.name = place.name;
         });
 
-        request.flickerPhotos(place, function(listPhotosUrl) { // arr urls
+        request.flickerPhotos(place, function(listPhotosUrl) {
             obj.photos = listPhotosUrl;
             self.openPlace(obj);
         });
@@ -48,11 +48,7 @@ const ViewModel = function() {
 
     self.resetOpenPlace = function() {
         self.openPlace(undefined);
-    }
-};
-
-ViewModel.prototype.getPlaceDetails = function(placeId, doneCall) {
-    placeDetailModel.getPlaceObjDetails(placeId, doneCall);
+    };
 };
 
 placesViewModel = new ViewModel();

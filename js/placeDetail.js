@@ -1,4 +1,4 @@
-placeDetailModel = (function() {
+placeDetail = (function() {
     const placesDetailHash = {};
     let service;
     let requestOpt;
@@ -7,7 +7,7 @@ placeDetailModel = (function() {
         service = new google.maps.places.PlacesService(map);
     };
 
-    function getPlaceObjDetails(placeId, doneCallback) {
+    function objDetail(placeId, doneCallback) {
         let objDetail = placesDetailHash[placeId];
         if (objDetail) {
             doneCallback(undefined, objDetail);
@@ -40,7 +40,7 @@ placeDetailModel = (function() {
     };
     return {
         init: init,
-        getPlaceObjDetails: getPlaceObjDetails,
+        objDetail: objDetail,
     };
 
 })();

@@ -33,7 +33,7 @@ var mapView = (function() {
         addMarkerList(marker);
 
         marker.addListener('click', function() {
-            placesViewModel.getPlaceDetails(this.placeId, openInfoWindow);
+            placesViewModel.getPlaceDetail(this);
         });
 
     };
