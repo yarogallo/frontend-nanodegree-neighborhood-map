@@ -33,18 +33,22 @@ const ViewModel = function() {
     self.showMoreInfo = function(place) {
         let obj = {};
 
-        request.flickerPhotos(place, function(listPhotosUrl) { // arr urls
+        request.wikiLinks(place, function(listWikiLinks) {
+            console.log(listWikiLinks);
+            obj.links = listWikiLinks;
             obj.name = place.name;
-            obj.photos = listPhotosUrl;
-            console.log(listPhotosUrl);
         });
 
-        request.wikiLinks(place, function(listWikiLinks) {
-            obj.links = listWikiLinks;
+        request.flickerPhotos(place, function(listPhotosUrl) { // arr urls
+            obj.photos = listPhotosUrl;
             self.openPlace(obj);
         });
 
     };
+
+    self.resetOpenPlace = function() {
+        self.openPlace(undefined);
+    }
 };
 
 ViewModel.prototype.getPlaceDetails = function(placeId, doneCall) {

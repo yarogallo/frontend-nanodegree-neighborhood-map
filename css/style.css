@@ -97,25 +97,49 @@ h4 {
     display: -webkit-flex;
 }
 
+.direction-column {
+    flex-direction: column;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
 .dir-column {
     flex-direction: column;
     flex-wrap: nowrap;
 }
 
-.space-between {
+.padding-between {
     padding: 10px 0;
 }
 
-.space-around {
+.padding-around {
     padding: 10px;
 }
 
-.space-bottom {
+.padding-bottom {
     padding-bottom: 5px;
 }
 
 .margin-lateral {
     margin: auto 5px;
+}
+
+.margin-right {
+    margin-right: 10px;
+}
+
+.margin-left {
+    margin-left: 10px;
 }
 
 .text-right {
@@ -169,4 +193,9 @@ h4 {
 
 .place-button:focus {
     outline: 0px;
+}
+
+.flicker-photo {
+    width: 120px;
+    height: 100px;
 }
