@@ -1,5 +1,5 @@
 const ViewModel = function() {
-
+    const listMenu = document.getElementById('list-container');
     this.myPlaces = ko.observableArray([]);
     this.openPlace = ko.observable();
     this.letters = ko.observable('');
@@ -17,6 +17,7 @@ const ViewModel = function() {
     };
 
     this.createPlace = function(err, result) {
+        console.log(this)
         if (err) {
             window.alert('Please write tha place again');
             return;
@@ -36,7 +37,7 @@ const ViewModel = function() {
     this.addNewPlace = function(place) {
         place.visibility = ko.observable(true);
         mapView.createMarkerMap(place);
-        placesViewModel.myPlaces.push(place);
+        this.myPlaces.push(place);
     };
 
     this.getPlaceDetail = function(place) {
@@ -54,7 +55,7 @@ const ViewModel = function() {
         };
         mapView.removeMarkerMap(place.placeId);
         placesViewModel.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId });
-        if (placesViewModel.openPlace().placeId === place.placeId) placesViewModel.resetOpenPlace();
+        if (placesViewModel.openPlace() && (placesViewModel.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
     };
     this.showMoreInfo = function(place) {
         request.moreInfo(place, function(requestedPlaceObj) {
@@ -66,31 +67,43 @@ const ViewModel = function() {
     };
 
     this.filterApply = function() {
-        for (let index = 0; index < placesViewModel.myPlaces().length; index++) {
-            let place = placesViewModel.myPlaces()[index];
+        for (let index = 0; index < this.myPlaces().length; index++) {
+            let place = this.myPlaces()[index];
             let str = place.name.substr(0, placesViewModel.letters().length);
-            if (str.toLocaleLowerCase() != placesViewModel.letters().toLocaleLowerCase()) {
+            if (str.toLocaleLowerCase() !== placesViewModel.letters().toLocaleLowerCase()) {
                 place.visibility(false);
                 mapView.removeMarkerMap(place.placeId);
             } else {
                 place.visibility(true);
                 mapView.showMarkerMap(place.placeId);
             };
-
         };
     };
 
     this.showInputNewPlace = function() {
-        placesViewModel.inputNewPlace(true);
+        this.inputNewPlace(true);
     };
 
     this.hideInputPlace = function() {
-        placesViewModel.inputNewPlace(false);
+        this.inputNewPlace(false);
     };
 
     this.searchInputValue = function() {
-        placeDetail.searchText(placesViewModel.inputNewPlaceValue(), placesViewModel.createPlace);
-        placesViewModel.inputNewPlaceValue('');
+        placeDetail.searchText(this.inputNewPlaceValue(), this.createPlace);
+        this.inputNewPlaceValue('');
+    };
+
+    this.toggleMenu = function() {
+        if (listMenu.classList.contains('outScreen')) {
+            window.requestAnimationFrame(function() {
+                listMenu.classList.remove('outScreen');
+            });
+            return;
+        }
+        window.requestAnimationFrame(function() {
+            listMenu.classList.add('outScreen');
+        });
+
     };
 
 };

@@ -43,7 +43,6 @@ placeDetail = (function() {
             query: text
         }, function(result, status) {
             if (status !== google.maps.places.PlacesServiceStatus.OK) {
-                console.log('skjks');
                 doneCallback(status, undefined);
                 return;
             };

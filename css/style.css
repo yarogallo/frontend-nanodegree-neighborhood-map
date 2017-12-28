@@ -36,6 +36,14 @@ h4 {
     margin: 0px;
 }
 
+button {
+    border: 0;
+}
+
+button:focus {
+    outline: 0px;
+}
+
 #menu-button {
     padding: 5px;
     border-radius: 0;
@@ -48,11 +56,11 @@ h4 {
     top: 0;
     left: 0;
     z-index: 2;
+    width: 250px;
 }
 
 #map-container {
     height: 80%;
-    ;
 }
 
 #map {
@@ -63,6 +71,17 @@ h4 {
 #pano {
     width: 300px;
     height: 200px;
+}
+
+.outScreen {
+    -webkit-transform: translateX(-270);
+    transform: translateX(-270px);
+}
+
+.animation {
+    -webkit-transition: transform 1s;
+    transition: transform 1s;
+    will-change: transform;
 }
 
 .container {
@@ -158,6 +177,15 @@ h4 {
     font-size: 2em;
 }
 
+.truncate {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    max-height: 3.6em;
+    overflow-wrap: break-word;
+}
+
 .background-black {
     background-color: rgb(0, 0, 0);
 }
@@ -183,7 +211,6 @@ h4 {
 }
 
 .place-button {
-    border: 0px;
     padding: 2px 4px;
 }
 
@@ -191,11 +218,16 @@ h4 {
     background-color: red;
 }
 
-.place-button:focus {
-    outline: 0px;
-}
-
 .flicker-photo {
     width: 120px;
     height: 100px;
+}
+
+@media screen and (min-width: 1390px) {
+    #list-container {
+        transform: translateX(0);
+    }
+    #edit-buttom-container {
+        transform: translateY(-50px)
+    }
 }
