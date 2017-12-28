@@ -70,6 +70,7 @@ places = (function() {
             lng: -122.4229555
         }
     }];
+
     return {
         MY_PLACES: MY_PLACES
     };

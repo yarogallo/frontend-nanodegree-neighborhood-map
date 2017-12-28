@@ -3,21 +3,44 @@ const ViewModel = function() {
     this.myPlaces = ko.observableArray([]);
     this.openPlace = ko.observable();
     this.letters = ko.observable('');
+    this.inputNewPlace = ko.observable(false);
+    this.inputNewPlaceValue = ko.observable();
 
     this.init = function() {
         const map = mapView.init();
         placeDetail.init(map);
         places.MY_PLACES.forEach(place => {
-            (function(place, vm) {
-                place.visibility = ko.observable(true);
-                mapView.createMarkerMap(place);
-                vm.myPlaces.push(place);
-            })(place, this);
+            (function(place) {
+                placesViewModel.addNewPlace(place);
+            })(place);
         });
     };
 
+    this.createPlace = function(err, result) {
+        if (err) {
+            window.alert('Please write tha place again');
+            return;
+        };
+        const newPlace = {
+            name: result.name,
+            location: {
+                lat: result.geometry.location.lat(),
+                lng: result.geometry.location.lng()
+            },
+            placeId: result.place_id
+        };
+        places.MY_PLACES.push(newPlace);
+        placesViewModel.addNewPlace(newPlace);
+    };
+
+    this.addNewPlace = function(place) {
+        place.visibility = ko.observable(true);
+        mapView.createMarkerMap(place);
+        placesViewModel.myPlaces.push(place);
+    };
+
     this.getPlaceDetail = function(place) {
-        placeDetail.objDetail(place.placeId, mapView.openInfoWindow);
+        placeDetail.searchDetail(place.placeId, mapView.openInfoWindow);
     };
     this.animateAsociateMarker = function(place) {
         mapView.bouncingMarker(place.placeId);
@@ -56,6 +79,20 @@ const ViewModel = function() {
 
         };
     };
+
+    this.showInputNewPlace = function() {
+        placesViewModel.inputNewPlace(true);
+    };
+
+    this.hideInputPlace = function() {
+        placesViewModel.inputNewPlace(false);
+    };
+
+    this.searchInputValue = function() {
+        placeDetail.searchText(placesViewModel.inputNewPlaceValue(), placesViewModel.createPlace);
+        placesViewModel.inputNewPlaceValue('');
+    };
+
 };
 
 placesViewModel = new ViewModel();

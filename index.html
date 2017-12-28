@@ -33,11 +33,17 @@
                         <h4><span data-bind="text: $data.name, event: {click: $parent.getPlaceDetail, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span></h4>  
                     </li>
                 </ul>
+                <div>
+                     <button class="entypo-cancel place-button background-black pointer" data-bind="click: hideInputPlace"></button>
+                    <button class="entypo-pencil place-button background-black pointer" data-bind="click: showInputNewPlace"></button>
+                    <label for="input-new-Place">Add New Place</label>
+                </div>
+                <form class="flex" data-bind="visible: inputNewPlace">
+                    <input id="input-new-Place" type="text" placeholder="Ex: Bay Bridge" data-bind="value: inputNewPlaceValue">
+                    <button id="menu-button" class="background-blue fontawesome-ok-sign pointer" data-bind="click: searchInputValue"> add</button>
+                </form>                   
             </div>
-
-            <div id="map" class="col-8">
-
-            </div>
+            <div id="map" class="col-8"></div>
         </div>
         <div id="place-info-container" class="row relative background-black padding-between" data-bind="with: openPlace">
             <header class="col-12  flex space-between">
