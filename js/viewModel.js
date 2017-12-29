@@ -2,13 +2,18 @@ const ViewModel = function() {
     const listMenu = document.getElementById('list-container');
     this.myPlaces = ko.observableArray([]);
     this.openPlace = ko.observable();
-    this.letters = ko.observable('');
+    this.textInput = ko.observable('');
     this.inputNewPlace = ko.observable(false);
+    this.inputNewPlaceIsClose = ko.computed(function() {
+        return !this.inputNewPlace();
+    }, this);
     this.inputNewPlaceValue = ko.observable();
 
+
     this.init = function() {
+        console.log(this);
         const map = mapView.init();
-        placeDetail.init(map);
+        placesDetail.init(map);
         places.MY_PLACES.forEach(place => {
             (function(place) {
                 placesViewModel.addNewPlace(place);
@@ -17,11 +22,10 @@ const ViewModel = function() {
     };
 
     this.createPlace = function(err, result) {
-        console.log(this)
         if (err) {
             window.alert('Please write tha place again');
             return;
-        };
+        }
         const newPlace = {
             name: result.name,
             location: {
@@ -41,7 +45,7 @@ const ViewModel = function() {
     };
 
     this.getPlaceDetail = function(place) {
-        placeDetail.searchDetail(place.placeId, mapView.openInfoWindow);
+        placesDetail.searchDetail(place.placeId, mapView.openInfoWindow);
     };
     this.animateAsociateMarker = function(place) {
         mapView.bouncingMarker(place.placeId);
@@ -52,13 +56,16 @@ const ViewModel = function() {
     this.removePlace = function(place) {
         if (!confirm(`Do you want delete ${place.name}`)) {
             return;
-        };
+        }
         mapView.removeMarkerMap(place.placeId);
-        placesViewModel.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId });
+        placesViewModel.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
         if (placesViewModel.openPlace() && (placesViewModel.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
     };
     this.showMoreInfo = function(place) {
         request.moreInfo(place, function(requestedPlaceObj) {
+            if (!requestedPlaceObj.links.length && !requestedPlaceObj.photosUrl.length) {
+                requestedPlaceObj.name += ' :Sorry!! further information found :(';
+            }
             placesViewModel.openPlace(requestedPlaceObj);
         });
     };
@@ -69,15 +76,15 @@ const ViewModel = function() {
     this.filterApply = function() {
         for (let index = 0; index < this.myPlaces().length; index++) {
             let place = this.myPlaces()[index];
-            let str = place.name.substr(0, placesViewModel.letters().length);
-            if (str.toLocaleLowerCase() !== placesViewModel.letters().toLocaleLowerCase()) {
+            let str = place.name.substr(0, placesViewModel.textInput().length);
+            if (str.toLocaleLowerCase() !== placesViewModel.textInput().toLocaleLowerCase()) {
                 place.visibility(false);
                 mapView.removeMarkerMap(place.placeId);
             } else {
                 place.visibility(true);
                 mapView.showMarkerMap(place.placeId);
-            };
-        };
+            }
+        }
     };
 
     this.showInputNewPlace = function() {
@@ -89,8 +96,12 @@ const ViewModel = function() {
     };
 
     this.searchInputValue = function() {
-        placeDetail.searchText(this.inputNewPlaceValue(), this.createPlace);
-        this.inputNewPlaceValue('');
+        placesDetail.searchText(this.inputNewPlaceValue(), this.createPlace);
+        this.resetInputNewValue('');
+    };
+
+    this.resetInputNewValue = function(str) {
+        this.inputNewPlaceValue(str);
     };
 
     this.toggleMenu = function() {

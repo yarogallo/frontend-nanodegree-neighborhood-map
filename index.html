@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/normalize.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Pangolin" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <script src="js/Knockout.js" defer async></script>
 </head>
 
 <body>
@@ -23,55 +23,52 @@
         <div id="map-container" class="row relative">
             <div id="list-container" class="background-black padding-around animation outScreen">
                 <form class="flex">
-                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: letters, event:{keyup: filterApply}">
-                    <button id="menu-button" class="background-blue fontawesome-filter"> filter</button>
+                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: textInput, event:{keyup: filterApply}">
+                    <button class="fontawesome-filter input-button text-black"> filter</button>
                 </form>
                 <ul data-bind="foreach: myPlaces">
-                    <li class="padding-bottom place" data-bind="visible: $data.visibility">
+                    <li class="padding-bottom" data-bind="visible: $data.visibility">
                         <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.removePlace"></button>
                         <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfo"></button>
-                        <h4><span data-bind="text: $data.name, event: {click: $parent.getPlaceDetail, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer place"><span></h4>  
+                        <p class="place"><span data-bind="text: $data.name, event: {click: $parent.getPlaceDetail, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer">name</span></p>
                     </li>
                 </ul>
                 <div>
-                     <button class="entypo-cancel place-button background-black pointer" data-bind="visible: inputNewPlace, click: hideInputPlace"></button>
-                    <button class="entypo-pencil place-button background-black pointer" data-bind="click: showInputNewPlace"></button>
-                    <label for="input-new-Place">Add New Place</label>
+                    <button class="entypo-cancel place-button background-black pointer" data-bind="visible: inputNewPlace, click: hideInputPlace"></button>
+                    <button class="fontawesome-edit place-button background-black pointer" data-bind="visible: inputNewPlaceIsClose, click: showInputNewPlace">Add New Place</button>
                 </div>
                 <form class="flex" data-bind="visible: inputNewPlace">
                     <input id="input-new-Place" type="text" placeholder="Ex: Bay Bridge" data-bind="value: inputNewPlaceValue">
-                    <button id="menu-button" class="background-blue fontawesome-ok-sign pointer" data-bind="click: searchInputValue"> add</button>
-                </form>                   
+                    <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="click: searchInputValue"> add</button>
+                </form>
             </div>
             <div id="map" class="col-8"></div>
         </div>
         <div id="place-info-container" class="row relative background-black padding-between" data-bind="with: openPlace">
             <header class="col-12  flex space-between">
-                <h1 data-bind="text: name" class="margin-left"></h1>
+                <h1 data-bind="text: name" class="margin-left">name</h1>
                 <button type="button" class="entypo-cancel place-button background-black pointer margin-right" data-bind="click: $parent.resetOpenPlace"></button>
             </header>
             <nav id="articles-container" class="col-12 padding-between" data-bind="foreach:links">
-                    <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank"  class="margin-left padding-bottom truncate"></a>
-                            </nav>
-                            <div id="images-container" class="col-12 flex space-around wrap" data-bind="foreach:photosUrl">
-                                <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
-                            </div>
+                <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="margin-left padding-bottom truncate"></a>
+            </nav>
+            <div id="images-container" class="col-12 flex space-around wrap" data-bind="foreach:photosUrl">
+                <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
             </div>
-            <footer id="map-footer" class="row background-black">
-                <div id="personal-info-container" class="col-12 text-center padding-around">
-                    <p class="padding-bottom">Created by: Yanisleidi Rodriguez</p>
-                    <p class="padding-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
-                    <p class="padding-bottom">Map icon made by: <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
-                            title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
-                </div>
-            </footer>
+        </div>
+        <footer id="map-footer" class="row background-black">
+            <div id="personal-info-container" class="col-12 text-center padding-around">
+                <p class="padding-bottom">Created by: Yanisleidi Rodriguez</p>
+                <p class="padding-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
+                <p class="padding-bottom">Site icons made by: <a href="https://weloveiconfonts.com/" target="_blank">www.weloveiconfonts.com</a></p>
+                <p class="padding-bottom">Map icon made by: <a href="https://www.flaticon.com/" target="_blank">www.flaticon.com</a></p>
+            </div>
+        </footer>
     </section>
-    <script src="js/Knockout.js"></script>
-    <script src="js/mapView.js"></script>
-    <script src="js/listView.js"></script>
-    <script src="js/places.js"></script>
-    <script src="js/placeDetail.js"></script>
-    <script src="js/request.js"></script>
+    <script src="js/mapView.js" async defer></script>
+    <script src="js/places.js" async defer></script>
+    <script src="js/placesDetail.js" async defer></script>
+    <script src="js/request.js" defer async></script>
     <script src="js/viewModel.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
 
