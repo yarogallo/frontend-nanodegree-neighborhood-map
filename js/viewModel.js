@@ -46,7 +46,7 @@ const ViewModel = function() {
     };
 
     self.showPlaceDetail = function(placeId) {
-        placesDetail.searchDetail(placeId, mapView.openInfoWindow);
+        placesDetail.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails);
     };
     self.handlePlaceClick = function(place) {
         self.showPlaceDetail(place.placeId);

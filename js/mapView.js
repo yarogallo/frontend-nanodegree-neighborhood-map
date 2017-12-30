@@ -40,14 +40,12 @@ mapView = (function() {
 
     }
 
-    function openInfoWindow(err, objDetail) {
-        let content;
-        let marker;
+    function openInfoWindowWithPlaceDetails(err, objDetail) {
         if (err) {
             content = `<div><h3>an error has occurr ${err}</h3></div>`;
             return;
         }
-        content = `<div class="infoContent text-black" >
+        const content = `<div class="infoContent text-black" >
             <div><p class="fontawesome-heart"><strong>Name:</strong>${objDetail.name} </p></div>
             <div><p class="fontawesome-map-marker"><strong>Address: </strong>${objDetail.address} </p></div>
             <div><p class="fontawesome-phone"><strong>Phone number: </strong>${objDetail.phoneNumber} </p></li>
@@ -56,8 +54,10 @@ mapView = (function() {
             <div><p class="fontawesome-calendar"><strong>Open Now: </strong>${objDetail.openNow}</p></div>
             </div>`;
 
-        marker = markers[objDetail.placeId];
+        openInfoWindow(markers[objDetail.placeId], content);
+    }
 
+    function openInfoWindow(marker, content) {
         info.open(map, marker);
         info.setContent(content);
     }
@@ -99,7 +99,7 @@ mapView = (function() {
         createMarkerMap: createMarkerMap,
         bouncingMarker: bouncingMarker,
         stopBouncingMarker: stopBouncingMarker,
-        openInfoWindow: openInfoWindow,
+        openInfoWindowWithPlaceDetails: openInfoWindowWithPlaceDetails,
         removeMarkerMap: removeMarkerMap,
         showMarkerMap: showMarkerMap,
         reorderMarkers: reorderMarkers
