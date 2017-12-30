@@ -20,17 +20,17 @@
                 <h1>San Francisco Places</h1>
             </div>
         </header>
-        <div id="map-container" class="row relative">
-            <div id="list-container" class="background-black padding-around animation outScreen">
+        <main id="map-container" class="row relative">
+            <div id="list-container" class="background-black padding-around animation outScreenX absolute">
                 <form class="flex">
-                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: textInput, event:{keyup: filterApply}">
+                    <input id="input-place" type="text" placeholder="Places" data-bind="textInput: inputPlace, event:{keyup: filterApply}">
                     <button class="fontawesome-filter input-button text-black"> filter</button>
                 </form>
                 <ul data-bind="foreach: myPlaces">
                     <li class="padding-bottom" data-bind="visible: $data.visibility">
                         <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.removePlace"></button>
                         <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfo"></button>
-                        <p class="place"><span data-bind="text: $data.name, event: {click: $parent.getPlaceDetail, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer">name</span></p>
+                        <p class="place"><span data-bind="text: $data.name, event: {click: $parent.handlePlaceClick, mouseover: $parent.animateAsociateMarker, mouseout: $parent.stopMarkerAnimation}" class="fontawesome-heart pointer">name</span></p>
                     </li>
                 </ul>
                 <div>
@@ -39,25 +39,25 @@
                 </div>
                 <form class="flex" data-bind="visible: inputNewPlace">
                     <input id="input-new-Place" type="text" placeholder="Ex: Bay Bridge" data-bind="value: inputNewPlaceValue">
-                    <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="click: searchInputValue"> add</button>
+                    <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="enable: inputNewPlaceValue, click: searchInputValue"> add</button>
                 </form>
             </div>
-            <div id="map" class="col-8"></div>
-        </div>
-        <div id="place-info-container" class="row relative background-black padding-between" data-bind="with: openPlace">
-            <header class="col-12  flex space-between">
-                <h1 data-bind="text: name" class="margin-left">name</h1>
-                <button type="button" class="entypo-cancel place-button background-black pointer margin-right" data-bind="click: $parent.resetOpenPlace"></button>
-            </header>
-            <nav id="articles-container" class="col-12 padding-between" data-bind="foreach:links">
-                <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="margin-left padding-bottom truncate"></a>
-            </nav>
-            <div id="images-container" class="col-12 flex space-around wrap" data-bind="foreach:photosUrl">
-                <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
+            <div id="place-info-container" class="col-12 background-black padding-between absolute" data-bind="with: openPlace">
+                <header class="flex space-between">
+                    <h1 data-bind="text: name" class="margin-left">name</h1>
+                    <button type="button" class="entypo-cancel place-button background-black pointer margin-right" data-bind="click: $parent.resetOpenPlace"></button>
+                </header>
+                <nav id="articles-container" class="padding-between" data-bind="foreach:links">
+                    <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="margin-left padding-bottom truncate"></a>
+                </nav>
+                <div id="images-container" class="col-12 flex space-around wrap" data-bind="foreach:photosUrl">
+                    <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
+                </div>
             </div>
-        </div>
+            <div id="map" class="col-8"></div>
+        </main>
         <footer id="map-footer" class="row background-black">
-            <div id="personal-info-container" class="col-12 text-center padding-around">
+            <div id="personal-info-container" class="col-12 text-center padding-between">
                 <p class="padding-bottom">Created by: Yanisleidi Rodriguez</p>
                 <p class="padding-bottom">Contact Information: <a href="mailto:yrgallo@gmail.com">yrgallo@gmail.com</a></p>
                 <p class="padding-bottom">Site icons made by: <a href="https://weloveiconfonts.com/" target="_blank">www.weloveiconfonts.com</a></p>

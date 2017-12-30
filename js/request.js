@@ -1,24 +1,7 @@
 request = (function() {
     const requestedPlacesHash = {};
 
-    function moreInfo(place, doneCallback) {
-        const obj = {};
-        if (requestedPlacesHash[place.placeId]) {
-            doneCallback(requestedPlacesHash[place.placeId]);
-            return;
-        }
-        obj.name = place.name;
-        obj.placeId = place.placeId;
-        makeHttpRequest(getWikiUrl(place.name), function(status, response) {
 
-            obj.links = status !== 200 ? [] : JSON.parse(response)[3];
-
-            makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
-                obj.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
-                doneCallback(obj);
-            });
-        });
-    }
 
     function makeHttpRequest(url, doneCallback) {
         const xhttp = new XMLHttpRequest();
@@ -54,7 +37,25 @@ request = (function() {
         });
         return photos;
     }
+
     return {
-        moreInfo: moreInfo
+        moreInfo: function(place, doneCallback) {
+            const obj = {};
+            if (requestedPlacesHash[place.placeId]) {
+                doneCallback(requestedPlacesHash[place.placeId]);
+                return;
+            }
+            obj.name = place.name;
+            obj.placeId = place.placeId;
+            makeHttpRequest(getWikiUrl(place.name), function(status, response) {
+
+                obj.links = status !== 200 ? [] : JSON.parse(response)[3];
+
+                makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
+                    obj.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
+                    doneCallback(obj);
+                });
+            });
+        }
     };
 })();

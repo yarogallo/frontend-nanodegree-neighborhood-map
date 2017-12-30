@@ -26,6 +26,7 @@ mapView = (function() {
             position: place.location,
             animation: google.maps.Animation.DROP,
             placeId: place.placeId,
+            label: place.number.toString(),
             icon: "images/hearts.svg",
             map: map
         };
@@ -33,7 +34,7 @@ mapView = (function() {
         addMarkerList(marker);
 
         marker.addListener('click', function() {
-            placesViewModel.getPlaceDetail(this);
+            placesViewModel.showPlaceDetail(this.placeId);
             bouncingMarker(this.placeId);
         });
 
@@ -56,6 +57,7 @@ mapView = (function() {
             </div>`;
 
         marker = markers[objDetail.placeId];
+
         info.open(map, marker);
         info.setContent(content);
     }
@@ -88,6 +90,10 @@ mapView = (function() {
         markers[placeId].setMap(map);
     }
 
+    function reorderMarkers(placeId, newNumber) {
+        markers[placeId].set('label', newNumber.toString());
+    }
+
     return {
         init: init,
         createMarkerMap: createMarkerMap,
@@ -95,6 +101,7 @@ mapView = (function() {
         stopBouncingMarker: stopBouncingMarker,
         openInfoWindow: openInfoWindow,
         removeMarkerMap: removeMarkerMap,
-        showMarkerMap: showMarkerMap
+        showMarkerMap: showMarkerMap,
+        reorderMarkers: reorderMarkers
     };
 })();

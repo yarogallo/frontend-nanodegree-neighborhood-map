@@ -1,17 +1,17 @@
 const ViewModel = function() {
+    const self = this;
     const listMenu = document.getElementById('list-container');
-    this.myPlaces = ko.observableArray([]);
-    this.openPlace = ko.observable();
-    this.textInput = ko.observable('');
-    this.inputNewPlace = ko.observable(false);
-    this.inputNewPlaceIsClose = ko.computed(function() {
-        return !this.inputNewPlace();
-    }, this);
-    this.inputNewPlaceValue = ko.observable();
+    const infoContainer = document.getElementById('place-info-container');
+    self.numberPlaces = 0;
+    self.myPlaces = ko.observableArray([]);
+    self.openPlace = ko.observable();
+    self.inputPlace = ko.observable('');
+    self.inputNewPlace = ko.observable(false);
+    self.inputNewPlaceIsClose = ko.computed(() => { return !self.inputNewPlace(); }, self);
+    self.inputNewPlaceValue = ko.observable('');
 
 
-    this.init = function() {
-        console.log(this);
+    self.init = function() {
         const map = mapView.init();
         placesDetail.init(map);
         places.MY_PLACES.forEach(place => {
@@ -21,7 +21,7 @@ const ViewModel = function() {
         });
     };
 
-    this.createPlace = function(err, result) {
+    self.createPlace = function(err, result) {
         if (err) {
             window.alert('Please write tha place again');
             return;
@@ -32,52 +32,68 @@ const ViewModel = function() {
                 lat: result.geometry.location.lat(),
                 lng: result.geometry.location.lng()
             },
-            placeId: result.place_id
+            placeId: result.place_id,
         };
         places.MY_PLACES.push(newPlace);
         placesViewModel.addNewPlace(newPlace);
     };
 
-    this.addNewPlace = function(place) {
+    self.addNewPlace = function(place) {
+        place.number = ++self.numberPlaces;
         place.visibility = ko.observable(true);
         mapView.createMarkerMap(place);
-        this.myPlaces.push(place);
+        self.myPlaces.push(place);
     };
 
-    this.getPlaceDetail = function(place) {
-        placesDetail.searchDetail(place.placeId, mapView.openInfoWindow);
+    self.showPlaceDetail = function(placeId) {
+        placesDetail.searchDetail(placeId, mapView.openInfoWindow);
     };
-    this.animateAsociateMarker = function(place) {
+    self.handlePlaceClick = function(place) {
+        self.showPlaceDetail(place.placeId);
+    };
+    self.animateAsociateMarker = function(place) {
         mapView.bouncingMarker(place.placeId);
     };
-    this.stopMarkerAnimation = function() {
+    self.stopMarkerAnimation = function() {
         mapView.stopBouncingMarker();
     };
-    this.removePlace = function(place) {
+    self.removePlace = function(place) {
         if (!confirm(`Do you want delete ${place.name}`)) {
             return;
         }
         mapView.removeMarkerMap(place.placeId);
         placesViewModel.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
+        placesViewModel.numberPlaces--;
+        placesViewModel.reorderNumbers(place.number);
         if (placesViewModel.openPlace() && (placesViewModel.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
     };
-    this.showMoreInfo = function(place) {
+
+    self.reorderNumbers = function(number) {
+        for (let index = number - 1; index < self.myPlaces().length; index++) {
+            place = self.myPlaces()[index];
+            place.number--;
+            mapView.reorderMarkers(place.placeId, place.number);
+        }
+    };
+
+    self.showMoreInfo = function(place) {
         request.moreInfo(place, function(requestedPlaceObj) {
             if (!requestedPlaceObj.links.length && !requestedPlaceObj.photosUrl.length) {
-                requestedPlaceObj.name += ' :Sorry!! further information found :(';
+                requestedPlaceObj.name += ' :Sorry!! No further information found :(';
             }
             placesViewModel.openPlace(requestedPlaceObj);
         });
     };
-    this.resetOpenPlace = function() {
+
+    self.resetOpenPlace = function() {
         placesViewModel.openPlace(undefined);
     };
 
-    this.filterApply = function() {
-        for (let index = 0; index < this.myPlaces().length; index++) {
-            let place = this.myPlaces()[index];
-            let str = place.name.substr(0, placesViewModel.textInput().length);
-            if (str.toLocaleLowerCase() !== placesViewModel.textInput().toLocaleLowerCase()) {
+    self.filterApply = function() {
+        for (let index = 0; index < self.myPlaces().length; index++) {
+            let place = self.myPlaces()[index];
+            let str = place.name.substr(0, placesViewModel.inputPlace().length);
+            if (str.toLocaleLowerCase() !== placesViewModel.inputPlace().toLocaleLowerCase()) {
                 place.visibility(false);
                 mapView.removeMarkerMap(place.placeId);
             } else {
@@ -87,32 +103,31 @@ const ViewModel = function() {
         }
     };
 
-    this.showInputNewPlace = function() {
-        this.inputNewPlace(true);
+    self.showInputNewPlace = function() {
+        self.inputNewPlace(true);
     };
 
-    this.hideInputPlace = function() {
-        this.inputNewPlace(false);
+    self.hideInputPlace = function() {
+        self.inputNewPlace(false);
     };
 
-    this.searchInputValue = function() {
-        placesDetail.searchText(this.inputNewPlaceValue(), this.createPlace);
-        this.resetInputNewValue('');
+    self.searchInputValue = function() {
+        placesDetail.searchText(self.inputNewPlaceValue(), self.createPlace);
     };
 
-    this.resetInputNewValue = function(str) {
-        this.inputNewPlaceValue(str);
+    self.resetInputNewValue = function(str) {
+        self.inputNewPlaceValue(str);
     };
 
-    this.toggleMenu = function() {
-        if (listMenu.classList.contains('outScreen')) {
+    self.toggleMenu = function() {
+        if (listMenu.classList.contains('outScreenX')) {
             window.requestAnimationFrame(function() {
-                listMenu.classList.remove('outScreen');
+                listMenu.classList.remove('outScreenX');
             });
             return;
         }
         window.requestAnimationFrame(function() {
-            listMenu.classList.add('outScreen');
+            listMenu.classList.add('outScreenX');
         });
 
     };

@@ -40,11 +40,14 @@ button:focus {
 }
 
 #list-container {
-    position: absolute;
-    top: 0;
-    left: 0;
     z-index: 2;
+    top: 0;
     width: 250px;
+}
+
+#place-info-container {
+    z-index: 3;
+    bottom: 0;
 }
 
 #map-container {
@@ -61,9 +64,14 @@ button:focus {
     height: 200px;
 }
 
-.outScreen {
-    -webkit-transform: translateX(-270);
+.outScreenX {
+    -webkit-transform: translateX(-270px);
     transform: translateX(-270px);
+}
+
+.absolute {
+    position: absolute;
+    left: 0;
 }
 
 .animation {
@@ -183,7 +191,7 @@ button:focus {
 }
 
 .infoContent {
-    font-family: 'Pangolin', cursive;
+    font-family: 'sans-serif';
 }
 
 .pointer:hover {
@@ -212,7 +220,7 @@ button:focus {
 }
 
 .place-button:hover {
-    background-color: red;
+    background-color: rgb(0, 128, 255);
 }
 
 .flicker-photo {
