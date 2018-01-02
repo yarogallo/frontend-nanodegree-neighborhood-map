@@ -1,7 +1,30 @@
-request = (function() {
-    const requestedPlacesHash = {};
+placesService = (function() {
+    const DEFAULT_STR = "Not available";
+    const autoCompleteInput = document.getElementById('input-new-Place');
+    const infoHash = {};
+    let service;
+    let autocomplete;
 
+    function createHashObj(placeId) {
+        infoHash[placeId] = {
+            detail: null,
+            moreInfo: null
+        };
+        return infoHash[placeId];
+    }
 
+    function setFormat(result) {
+        return objDetail = {
+            placeId: result.place_id,
+            name: result.name ? result.name : DEFAULT_STR,
+            address: result.formatted_address ? result.formatted_address : DEFAULT_STR,
+            phoneNumber: result.formatted_phone_number ? result.formatted_phone_number : DEFAULT_STR,
+            rating: result.rating ? result.rating : DEFAULT_STR,
+            types: result.types,
+            url: result.url ? result.url : "#",
+            openNow: result.opening_hours ? result.opening_hours.open_now : DEFAULT_STR,
+        };
+    }
 
     function makeHttpRequest(url, doneCallback) {
         const xhttp = new XMLHttpRequest();
@@ -39,21 +62,60 @@ request = (function() {
     }
 
     return {
-        moreInfo: function(place, doneCallback) {
-            const obj = {};
-            if (requestedPlacesHash[place.placeId]) {
-                doneCallback(requestedPlacesHash[place.placeId]);
+        init: function(map) {
+            service = new google.maps.places.PlacesService(map);
+            autocomplete = new google.maps.places.Autocomplete(autoCompleteInput);
+            autocomplete.bindTo('bounds', map);
+            autocomplete.addListener('place_changed', () => {
+                placesViewModel.resetInputNewValue('');
+                placesViewModel.createPlace(autocomplete.getPlace());
+            });
+        },
+        searchDetail: function(placeId, doneCallback) {
+            let obj = infoHash[placeId];
+            if (!obj) obj = createHashObj(placeId);
+            if (obj.detail) {
+                doneCallback(obj.detail);
                 return;
             }
-            obj.name = place.name;
-            obj.placeId = place.placeId;
-            makeHttpRequest(getWikiUrl(place.name), function(status, response) {
+            service.getDetails({
+                placeId: placeId
+            }, function(result, status) {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    doneCallback(undefined);
+                    return;
+                }
+                obj.detail = setFormat(result);
+                doneCallback(obj.detail);
+            });
+        },
 
-                obj.links = status !== 200 ? [] : JSON.parse(response)[3];
+        searchText: function(text, doneCallback) {
+            service.textSearch({
+                query: text
+            }, function(result, status) {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    doneCallback(undefined);
+                    return;
+                }
+                doneCallback(result[0]);
+            });
+        },
+
+        getMoreInfo: function(place, doneCallback) {
+            let obj = infoHash[place.placeId];
+            if (!obj) obj = createHashObj(place.placeId);
+            if (obj.moreInfo) {
+                doneCallback(obj.moreInfo);
+                return;
+            }
+            makeHttpRequest(getWikiUrl(place.name), function(status, response) {
+                obj.moreInfo = {};
+                obj.moreInfo.links = status !== 200 ? [] : JSON.parse(response)[3];
 
                 makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
-                    obj.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
-                    doneCallback(obj);
+                    obj.moreInfo.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
+                    doneCallback(obj.moreInfo);
                 });
             });
         }

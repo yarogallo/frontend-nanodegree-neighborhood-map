@@ -10,86 +10,23 @@ const ViewModel = function() {
     self.inputNewPlaceIsClose = ko.computed(() => { return !self.inputNewPlace(); }, self);
     self.inputNewPlaceValue = ko.observable('');
 
-
-    self.init = function() {
+    self.init = () => {
         const map = mapView.init();
-        placesDetail.init(map);
+        placesService.init(map);
         places.MY_PLACES.forEach(place => {
-            (function(place) {
-                placesViewModel.addNewPlace(place);
-            })(place);
+            ((place) => { placesViewModel.addNewPlace(place); })(place);
         });
     };
 
-    self.createPlace = function(err, result) {
-        if (err) {
-            window.alert('Please write tha place again');
+    self.toggleMenuHandler = () => {
+        if (listMenu.classList.contains('outScreenX')) {
+            window.requestAnimationFrame(() => { listMenu.classList.remove('outScreenX'); });
             return;
         }
-        const newPlace = {
-            name: result.name,
-            location: {
-                lat: result.geometry.location.lat(),
-                lng: result.geometry.location.lng()
-            },
-            placeId: result.place_id,
-        };
-        places.MY_PLACES.push(newPlace);
-        placesViewModel.addNewPlace(newPlace);
+        window.requestAnimationFrame(() => { listMenu.classList.add('outScreenX'); });
     };
 
-    self.addNewPlace = function(place) {
-        place.number = ++self.numberPlaces;
-        place.visibility = ko.observable(true);
-        mapView.createMarkerMap(place);
-        self.myPlaces.push(place);
-    };
-
-    self.showPlaceDetail = function(placeId) {
-        placesDetail.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails);
-    };
-    self.handlePlaceClick = function(place) {
-        self.showPlaceDetail(place.placeId);
-    };
-    self.animateAsociateMarker = function(place) {
-        mapView.bouncingMarker(place.placeId);
-    };
-    self.stopMarkerAnimation = function() {
-        mapView.stopBouncingMarker();
-    };
-    self.removePlace = function(place) {
-        if (!confirm(`Do you want delete ${place.name}`)) {
-            return;
-        }
-        mapView.removeMarkerMap(place.placeId);
-        placesViewModel.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
-        placesViewModel.numberPlaces--;
-        placesViewModel.reorderNumbers(place.number);
-        if (placesViewModel.openPlace() && (placesViewModel.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
-    };
-
-    self.reorderNumbers = function(number) {
-        for (let index = number - 1; index < self.myPlaces().length; index++) {
-            place = self.myPlaces()[index];
-            place.number--;
-            mapView.reorderMarkers(place.placeId, place.number);
-        }
-    };
-
-    self.showMoreInfo = function(place) {
-        request.moreInfo(place, function(requestedPlaceObj) {
-            if (!requestedPlaceObj.links.length && !requestedPlaceObj.photosUrl.length) {
-                requestedPlaceObj.name += ' :Sorry!! No further information found :(';
-            }
-            placesViewModel.openPlace(requestedPlaceObj);
-        });
-    };
-
-    self.resetOpenPlace = function() {
-        placesViewModel.openPlace(undefined);
-    };
-
-    self.filterApply = function() {
+    self.filterPlacesHandler = () => {
         for (let index = 0; index < self.myPlaces().length; index++) {
             let place = self.myPlaces()[index];
             let str = place.name.substr(0, placesViewModel.inputPlace().length);
@@ -103,34 +40,74 @@ const ViewModel = function() {
         }
     };
 
-    self.showInputNewPlace = function() {
-        self.inputNewPlace(true);
+    self.removePlaceHandler = (place) => {
+        if (!confirm(`Do you want delete ${place.name}`)) return;
+        mapView.removeMarkerMap(place.placeId);
+        self.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
+        self.numberPlaces--;
+        self.reorderNumbers(place.number);
+        if (self.openPlace() && (self.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
     };
 
-    self.hideInputPlace = function() {
-        self.inputNewPlace(false);
+    self.showMoreInfoHandler = (place) => {
+        placesService.getMoreInfo(place, (infoObj) => {
+            if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name = ' :Sorry!! No further information found :(';
+            infoObj.name = place.name;
+            infoObj.placeId = place.placeId;
+            self.openPlace(infoObj);
+        });
     };
 
-    self.searchInputValue = function() {
-        placesDetail.searchText(self.inputNewPlaceValue(), self.createPlace);
-    };
+    self.placeClickHandler = (place) => { self.showPlaceDetail(place.placeId); };
 
-    self.resetInputNewValue = function(str) {
-        self.inputNewPlaceValue(str);
-    };
+    self.placeMouseoverHandler = (place) => { mapView.animateMarker(place.placeId); };
 
-    self.toggleMenu = function() {
-        if (listMenu.classList.contains('outScreenX')) {
-            window.requestAnimationFrame(function() {
-                listMenu.classList.remove('outScreenX');
-            });
+    self.placeMouseoutHandler = () => { mapView.stopMarkerAnimation(); };
+
+    self.hideInputHandler = () => { self.inputNewPlace(false); };
+
+    self.showInputHandler = () => { self.inputNewPlace(true); };
+
+    self.searchValueHandler = () => { placesService.searchText(self.inputNewPlaceValue(), self.createPlace); };
+
+    self.resetOpenPlaceHandler = () => { placesViewModel.openPlace(undefined); };
+
+
+    self.createPlace = (result) => {
+        if (!result) {
+            window.alert('Please write the place again');
             return;
         }
-        window.requestAnimationFrame(function() {
-            listMenu.classList.add('outScreenX');
-        });
-
+        const newPlace = {
+            name: result.name,
+            location: {
+                lat: result.geometry.location.lat(),
+                lng: result.geometry.location.lng()
+            },
+            placeId: result.place_id,
+        };
+        places.MY_PLACES.push(newPlace);
+        self.addNewPlace(newPlace);
     };
+
+    self.addNewPlace = (place) => {
+        place.number = ++self.numberPlaces;
+        place.visibility = ko.observable(true);
+        mapView.createMarkerMap(place);
+        self.myPlaces.push(place);
+    };
+
+    self.reorderNumbers = (number) => {
+        for (let index = number - 1; index < self.myPlaces().length; index++) {
+            place = self.myPlaces()[index];
+            place.number--;
+            mapView.reorderMarkers(place.placeId, place.number);
+        }
+    };
+
+    self.resetInputNewValue = function(str) { self.inputNewPlaceValue(str); };
+
+    self.showPlaceDetail = (placeId) => { placesService.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails) };
 
 };
 

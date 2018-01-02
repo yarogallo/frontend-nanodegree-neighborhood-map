@@ -40,12 +40,13 @@ mapView = (function() {
 
     }
 
-    function openInfoWindowWithPlaceDetails(err, objDetail) {
-        if (err) {
-            content = `<div><h3>an error has occurr ${err}</h3></div>`;
+    function openInfoWindowWithPlaceDetails(objDetail) {
+        let content;
+        if (!objDetail) {
+            content = `<div><h3>an error has occurred</h3></div>`;
             return;
         }
-        const content = `<div class="infoContent text-black" >
+        content = `<div class="infoContent text-black" >
             <div><p class="fontawesome-heart"><strong>Name:</strong>${objDetail.name} </p></div>
             <div><p class="fontawesome-map-marker"><strong>Address: </strong>${objDetail.address} </p></div>
             <div><p class="fontawesome-phone"><strong>Phone number: </strong>${objDetail.phoneNumber} </p></li>
@@ -97,8 +98,8 @@ mapView = (function() {
     return {
         init: init,
         createMarkerMap: createMarkerMap,
-        bouncingMarker: bouncingMarker,
-        stopBouncingMarker: stopBouncingMarker,
+        animateMarker: bouncingMarker,
+        stopMarkerAnmation: stopBouncingMarker,
         openInfoWindowWithPlaceDetails: openInfoWindowWithPlaceDetails,
         removeMarkerMap: removeMarkerMap,
         showMarkerMap: showMarkerMap,
