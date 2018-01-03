@@ -34,10 +34,10 @@
                     </li>
                 </ul>
                 <div>
-                    <button class="entypo-cancel place-button background-black pointer" data-bind="visible: inputNewPlace, click: hideInputHandler"></button>
-                    <button class="fontawesome-edit place-button background-black pointer" data-bind="visible: inputNewPlaceIsClose, click: showInputHandler">Add New Place</button>
+                    <button class="entypo-cancel place-button background-black pointer" data-bind="visible: inputNewPlaceVisible, click: toggleInputHandler"></button>
+                    <button class="fontawesome-edit place-button background-black pointer" data-bind="visible: !inputNewPlaceVisible(), click: toggleInputHandler">Add New Place</button>
                 </div>
-                <form class="flex" data-bind="visible: inputNewPlace">
+                <form class="flex" data-bind="visible: inputNewPlaceVisible">
                     <input id="input-new-Place" type="text" placeholder="Ex: Bay Bridge" data-bind="value: inputNewPlaceValue">
                     <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="click: searchValueHandler"> add</button>
                 </form>
@@ -48,13 +48,13 @@
                     <button type="button" class="entypo-cancel background-black pointer margin-right" data-bind="click: $parent.resetOpenPlaceHandler"></button>
                 </header>
                 <div id="articles-container" class="padding-between margin-left">
-                    <p>Related Links:</p>
+                    <p data-bind="visible: links.length">Related Links:</p>
                     <nav data-bind="foreach:links">
                         <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="entypo-link padding-bottom truncate"></a>
                     </nav>
                 </div>
                 <div>
-                    <p class="margin-left">Related Photos:</p>
+                    <p class="margin-left" data-bind="visible: photosUrl.length > 0">Related Photos:</p>
                     <div id="images-container" class="col-12 flex space-around wrap " data-bind="foreach:photosUrl">
                         <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
                     </div>
@@ -75,7 +75,7 @@
     <script src="js/places.js" async defer></script>
     <script src="js/placesService.js" defer async></script>
     <script src="js/viewModel.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
 
 
 </body>

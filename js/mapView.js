@@ -1,18 +1,16 @@
 mapView = (function() {
     const mapContainer = document.getElementById('map');
-    const markers = {};
-    let openMarker = null;
+    const markers = {}; //All markers
+    let openMarker = null; //The marker that is actuallly been animated
     let map;
     let info;
 
-    const openInfoWindow = (marker, content) => {
+    const openInfoWindow = (marker, content) => { //Open infoWindow in a specific marker with specific content
         info.open(map, marker);
         info.setContent(content);
     };
 
-    const addMarker = (marker) => { markers[marker.placeId] = marker; };
-
-    const getHtmlContent = (objDetail) => {
+    const getHtmlContent = (objDetail) => { //Generate content to show in the infoWindow
         if (!objDetail) return `<div><h3>an error has occurred</h3></div>`;
         return `<div class="infoContent text-black" >
             <div><p class="fontawesome-heart"><strong>Name:</strong>${objDetail.name} </p></div>
@@ -24,13 +22,15 @@ mapView = (function() {
             </div>`;
     };
 
-    const bounceMarker = (marker) => {
+    const addMarker = (marker) => { markers[marker.placeId] = marker; }; //Add marker to markers hash, using placeId as a key
+
+    const bounceMarker = (marker) => { //Given a marker, set it to bounce
         if (openMarker) stopBounceMarker();
         marker.setAnimation(google.maps.Animation.BOUNCE);
         openMarker = marker;
     };
 
-    const stopBounceMarker = () => {
+    const stopBounceMarker = () => { // Stop marker that is bouncing
         if (!openMarker) return;
         openMarker.setAnimation(null);
         openMarker = null;
@@ -44,10 +44,10 @@ mapView = (function() {
                 streetViewControl: false
             });
             info = new google.maps.InfoWindow();
-            info.addListener("closeclick", stopBounceMarker);
+            info.addListener("closeclick", stopBounceMarker); //When infoWindow is closed, stop bouncing the asociated marker
             return map;
         },
-        createMarkerMap: function(place) {
+        createMarkerMap: function(place) { //Given a place, create a marker if it doesn't exist
             if (markers[place.placeId]) {
                 this.showMarkerMap(place.placeId);
                 return;
@@ -73,16 +73,16 @@ mapView = (function() {
         stopMarkerAnimation: function() {
             stopBounceMarker();
         },
-        openInfoWindowWithPlaceDetails: function(objDetail) {
+        openInfoWindowWithPlaceDetails: function(objDetail) { //Given a placeDetail, open an infoWindow
             openInfoWindow(markers[objDetail.placeId], getHtmlContent(objDetail));
         },
-        removeMarkerMap: function(placeId) {
+        removeMarkerMap: function(placeId) { //Remove specific marker from the map
             markers[placeId].setMap(null);
         },
-        showMarkerMap: function(placeId) {
+        showMarkerMap: function(placeId) { //Show specific marker on the map, given placeId
             markers[placeId].setMap(map);
         },
-        reorderMarkers: function(placeId, newNumber) {
+        changeMarkerLabel: function(placeId, newNumber) { //Change label to a specific marker 
             markers[placeId].set('label', newNumber.toString());
         }
     };

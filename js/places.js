@@ -72,7 +72,7 @@ places = (function() {
     }];
     return {
         MY_PLACES: MY_PLACES,
-        createNewPlace: function(name, placeId, lat, lng) {
+        createNewPlace: function(name, placeId, lat, lng) { // Create a new place and add it to my places array
             const place = {
                 name: name,
                 placeId: placeId,

@@ -1,7 +1,7 @@
 placesService = (function() {
     const DEFAULT_STR = "Not available";
     const autoCompleteInput = document.getElementById('input-new-Place');
-    const infoHash = {};
+    const infoHash = {}; //Hash for all info requested(detail, related links, related photos url)
     let service;
     let autocomplete;
 
@@ -13,7 +13,7 @@ placesService = (function() {
         return infoHash[placeId];
     };
 
-    const setFormat = (result) => {
+    const setFormat = (result) => { //Using search detail result, create detail object
         return {
             placeId: result.place_id,
             name: result.name ? result.name : DEFAULT_STR,
@@ -48,7 +48,7 @@ placesService = (function() {
         return `https://en.wikipedia.org//w/api.php?action=opensearch&format=json&origin=*&search=${placeName}&limit=5`;
     };
 
-    const getUrlPhotos = (response) => {
+    const getUrlPhotos = (response) => { //Using flicker response, create correct url
         const photos = [];
         const rsp = JSON.parse(response);
         if (rsp.stat !== 'ok') {
@@ -70,7 +70,7 @@ placesService = (function() {
                 placesViewModel.createPlace(autocomplete.getPlace());
             });
         },
-        searchDetail: function(placeId, doneCallback) {
+        searchDetail: function(placeId, doneCallback) { //Search place detail using google place api, ejecut doneCallback when finish. 
             let obj = infoHash[placeId];
             if (!obj) obj = createHashObj(placeId);
             if (obj.detail) {
@@ -89,7 +89,7 @@ placesService = (function() {
             });
         },
 
-        searchText: function(text, doneCallback) {
+        searchText: function(text, doneCallback) { // Search a place by text using google place api, ejecute doneCallback when finish
             service.textSearch({
                 query: text
             }, function(result, status) {
@@ -101,7 +101,7 @@ placesService = (function() {
             });
         },
 
-        getMoreInfo: function(place, doneCallback) {
+        getMoreInfo: function(place, doneCallback) { //Get wiki list of a place related links and flicker related photos, doneCallback when finish
             let obj = infoHash[place.placeId];
             if (!obj) obj = createHashObj(place.placeId);
             if (obj.moreInfo) {
