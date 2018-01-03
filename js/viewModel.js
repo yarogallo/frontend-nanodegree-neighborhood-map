@@ -2,10 +2,28 @@ const ViewModel = function() {
     const self = this;
     const listMenu = document.getElementById('list-container');
     const infoContainer = document.getElementById('place-info-container');
-    self.numberPlaces = 0;
+    const reorderNumbers = (number) => {
+        for (let index = number - 1; index < self.myPlaces().length; index++) {
+            place = self.myPlaces()[index];
+            place.number--;
+            mapView.reorderMarkers(place.placeId, place.number);
+        }
+    };
+    const resetInputNewValue = (str) => { self.inputNewPlaceValue(str); };
+    const addToMyPlaces = (place) => {
+        place.number = self.myPlaces().length + 1;
+        place.visibility = ko.observable(true);
+        mapView.createMarkerMap(place);
+        self.myPlaces.push(place);
+    };
+    const toggleOutScreen = (elem, doneCallback) => {
+        window.requestAnimationFrame(() => { elem.classList.toggle('outScreenX'); });
+        if (doneCallback) window.setTimeout(doneCallback, 2000);
+    };
+
     self.myPlaces = ko.observableArray([]);
     self.openPlace = ko.observable();
-    self.inputPlace = ko.observable('');
+    self.inputText = ko.observable('');
     self.inputNewPlace = ko.observable(false);
     self.inputNewPlaceIsClose = ko.computed(() => { return !self.inputNewPlace(); }, self);
     self.inputNewPlaceValue = ko.observable('');
@@ -14,23 +32,19 @@ const ViewModel = function() {
         const map = mapView.init();
         placesService.init(map);
         places.MY_PLACES.forEach(place => {
-            ((place) => { placesViewModel.addNewPlace(place); })(place);
+            ((place) => { addToMyPlaces(place); })(place);
         });
     };
 
     self.toggleMenuHandler = () => {
-        if (listMenu.classList.contains('outScreenX')) {
-            window.requestAnimationFrame(() => { listMenu.classList.remove('outScreenX'); });
-            return;
-        }
-        window.requestAnimationFrame(() => { listMenu.classList.add('outScreenX'); });
+        toggleOutScreen(listMenu);
     };
 
     self.filterPlacesHandler = () => {
         for (let index = 0; index < self.myPlaces().length; index++) {
             let place = self.myPlaces()[index];
-            let str = place.name.substr(0, placesViewModel.inputPlace().length);
-            if (str.toLocaleLowerCase() !== placesViewModel.inputPlace().toLocaleLowerCase()) {
+            let str = place.name.substr(0, self.inputText().length);
+            if (str.toLocaleLowerCase() !== self.inputText().toLocaleLowerCase()) {
                 place.visibility(false);
                 mapView.removeMarkerMap(place.placeId);
             } else {
@@ -44,16 +58,16 @@ const ViewModel = function() {
         if (!confirm(`Do you want delete ${place.name}`)) return;
         mapView.removeMarkerMap(place.placeId);
         self.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
-        self.numberPlaces--;
-        self.reorderNumbers(place.number);
-        if (self.openPlace() && (self.openPlace().placeId === place.placeId)) placesViewModel.resetOpenPlace();
+        if (self.openPlace() && (self.openPlace().placeId === place.placeId)) self.resetOpenPlaceHandler();
+        reorderNumbers(place.number);
     };
 
     self.showMoreInfoHandler = (place) => {
         placesService.getMoreInfo(place, (infoObj) => {
-            if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name = ' :Sorry!! No further information found :(';
             infoObj.name = place.name;
+            if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name += ' :Sorry!! No further information found :(';
             infoObj.placeId = place.placeId;
+            if (!self.openPlace()) toggleOutScreen(infoContainer);
             self.openPlace(infoObj);
         });
     };
@@ -68,46 +82,28 @@ const ViewModel = function() {
 
     self.showInputHandler = () => { self.inputNewPlace(true); };
 
-    self.searchValueHandler = () => { placesService.searchText(self.inputNewPlaceValue(), self.createPlace); };
+    self.searchValueHandler = () => {
+        if (!self.inputNewPlaceValue()) return;
+        placesService.searchText(self.inputNewPlaceValue(), self.createPlace);
+    };
 
-    self.resetOpenPlaceHandler = () => { placesViewModel.openPlace(undefined); };
-
+    self.resetOpenPlaceHandler = () => {
+        toggleOutScreen(infoContainer, () => {
+            self.openPlace(undefined);
+        });
+    };
 
     self.createPlace = (result) => {
+        resetInputNewValue('');
         if (!result) {
             window.alert('Please write the place again');
             return;
         }
-        const newPlace = {
-            name: result.name,
-            location: {
-                lat: result.geometry.location.lat(),
-                lng: result.geometry.location.lng()
-            },
-            placeId: result.place_id,
-        };
-        places.MY_PLACES.push(newPlace);
-        self.addNewPlace(newPlace);
+        const place = places.createNewPlace(result.name, result.place_id, result.geometry.location.lat(), result.geometry.location.lng());
+        addToMyPlaces(place);
     };
 
-    self.addNewPlace = (place) => {
-        place.number = ++self.numberPlaces;
-        place.visibility = ko.observable(true);
-        mapView.createMarkerMap(place);
-        self.myPlaces.push(place);
-    };
-
-    self.reorderNumbers = (number) => {
-        for (let index = number - 1; index < self.myPlaces().length; index++) {
-            place = self.myPlaces()[index];
-            place.number--;
-            mapView.reorderMarkers(place.placeId, place.number);
-        }
-    };
-
-    self.resetInputNewValue = function(str) { self.inputNewPlaceValue(str); };
-
-    self.showPlaceDetail = (placeId) => { placesService.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails) };
+    self.showPlaceDetail = (placeId) => { placesService.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails); };
 
 };
 

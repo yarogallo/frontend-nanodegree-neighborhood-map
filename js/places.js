@@ -70,8 +70,19 @@ places = (function() {
             lng: -122.4229555
         }
     }];
-
     return {
-        MY_PLACES: MY_PLACES
+        MY_PLACES: MY_PLACES,
+        createNewPlace: function(name, placeId, lat, lng) {
+            const place = {
+                name: name,
+                placeId: placeId,
+                location: {
+                    lat: lat,
+                    lng: lng
+                },
+            };
+            MY_PLACES.push(place);
+            return place;
+        }
     };
 })();

@@ -5,16 +5,16 @@ placesService = (function() {
     let service;
     let autocomplete;
 
-    function createHashObj(placeId) {
+    const createHashObj = (placeId) => {
         infoHash[placeId] = {
             detail: null,
             moreInfo: null
         };
         return infoHash[placeId];
-    }
+    };
 
-    function setFormat(result) {
-        return objDetail = {
+    const setFormat = (result) => {
+        return {
             placeId: result.place_id,
             name: result.name ? result.name : DEFAULT_STR,
             address: result.formatted_address ? result.formatted_address : DEFAULT_STR,
@@ -24,9 +24,9 @@ placesService = (function() {
             url: result.url ? result.url : "#",
             openNow: result.opening_hours ? result.opening_hours.open_now : DEFAULT_STR,
         };
-    }
+    };
 
-    function makeHttpRequest(url, doneCallback) {
+    const makeHttpRequest = (url, doneCallback) => {
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState === 4) {
@@ -35,20 +35,20 @@ placesService = (function() {
         };
         xhttp.open("GET", url, true);
         xhttp.send();
-    }
+    };
 
-    function getFlickerUrl(placeName, location) {
+    const getFlickerUrl = (placeName, location) => {
         const key = 'd4cd83c196005f3d68c38be13ea02cd2';
         const lat = location.lat;
         const lon = location.lng;
-        return `https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=${key}&per_page=10&nojsoncallback=1&lat=${lat}&lon=${lon}&tags=${placeName} `;
-    }
+        return `https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=${key}&per_page=6&nojsoncallback=1&lat=${lat}&lon=${lon}&tags=${placeName} `;
+    };
 
-    function getWikiUrl(placeName) {
-        return `https://en.wikipedia.org//w/api.php?action=opensearch&format=json&origin=*&search=${placeName}&limit=10`;
-    }
+    const getWikiUrl = (placeName) => {
+        return `https://en.wikipedia.org//w/api.php?action=opensearch&format=json&origin=*&search=${placeName}&limit=5`;
+    };
 
-    function getUrlPhotos(response) {
+    const getUrlPhotos = (response) => {
         const photos = [];
         const rsp = JSON.parse(response);
         if (rsp.stat !== 'ok') {
@@ -59,7 +59,7 @@ placesService = (function() {
                 photo.server + "/" + photo.id + "_" + photo.secret + "_" + "t.jpg");
         });
         return photos;
-    }
+    };
 
     return {
         init: function(map) {
@@ -67,7 +67,6 @@ placesService = (function() {
             autocomplete = new google.maps.places.Autocomplete(autoCompleteInput);
             autocomplete.bindTo('bounds', map);
             autocomplete.addListener('place_changed', () => {
-                placesViewModel.resetInputNewValue('');
                 placesViewModel.createPlace(autocomplete.getPlace());
             });
         },
