@@ -24,5 +24,10 @@ Load index.htm file in a browser of your preference. The site was successfully t
 * [**Flickr Photo Search**](https://www.flickr.com/services/api/flickr.photos.search.html)
 * [**MediaWiki API:Opensearch**](https://www.mediawiki.org/wiki/API:Opensearch)
 
+<<<<<<< HEAD
 ## Download
 * [**Available to download here**](https://github.com/yarogallo/frontend-nanodegree-neighborhood-map)
+=======
+##Download
+* [**Here available to dowload**](https://github.com/yarogallo/frontend-nanodegree-neighborhood-map)
+>>>>>>> 683f76d6f724a05a16cc613a86f2a1d4a25d5413
