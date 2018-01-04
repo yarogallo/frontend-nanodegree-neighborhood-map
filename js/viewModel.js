@@ -34,7 +34,7 @@ const ViewModel = function() {
             ((place) => { addToMyPlaces(place); })(place);
         });
     };
-
+    self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later') };
     self.toggleMenuHandler = () => { toggleOutScreen(listMenu); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
 
     self.filterPlacesHandler = () => { //Filter places names and markers, each time the user write in the upper input
