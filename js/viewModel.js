@@ -59,8 +59,9 @@ const ViewModel = function() {
         reorderNumbers(place.number);
     };
 
-    self.showMoreInfoHandler = (place) => { //Ask to placesServices for related links and photos(further info) and show update openPlace
+    self.placeClickHandler = (place) => { //Ask to placesServices for related links and photos(further info) and show update openPlace
         placesService.getMoreInfo(place, (infoObj) => {
+            self.showPlaceDetail(place.placeId);
             infoObj.name = place.name;
             infoObj.placeId = place.placeId;
             if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name += ' :Sorry!! No further information found :(';
@@ -68,8 +69,6 @@ const ViewModel = function() {
             self.openPlace(infoObj);
         });
     };
-
-    self.placeClickHandler = (place) => { self.showPlaceDetail(place.placeId); }; //Call showPlacesDetail with the placeId of the place that was clicked
 
     self.placeMouseoverHandler = (place) => { mapView.animateMarker(place.placeId); }; //Animate corresponding marker when mouse is over a place 
 
