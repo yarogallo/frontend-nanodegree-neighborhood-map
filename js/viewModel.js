@@ -13,7 +13,6 @@ const ViewModel = function() {
     const addToMyPlaces = (place) => { //Given a place add it to myPlaces observable array with two new properties number and visibility
         place.number = self.myPlaces().length + 1;
         place.visibility = ko.observable(true);
-        mapView.createMarkerMap(place);
         self.myPlaces.push(place);
     };
     const toggleOutScreen = (elem, doneCallback) => { //Toggle an element in or out of the screen, ejecute callback if there is any
@@ -22,6 +21,9 @@ const ViewModel = function() {
     };
 
     self.myPlaces = ko.observableArray([]); //places to show 
+    places.MY_PLACES.forEach(place => { //Add places to myPlaces observable array
+        ((place) => { addToMyPlaces(place); })(place);
+    });
     self.openPlace = ko.observable(); //place was clicked for further information 
     self.inputText = ko.observable(''); // Upper input text input
     self.inputNewPlaceVisible = ko.observable(false); // Visibility lower input, initial value hidden
@@ -30,9 +32,7 @@ const ViewModel = function() {
     self.init = () => {
         const map = mapView.init();
         placesService.init(map);
-        places.MY_PLACES.forEach(place => { //Add places to myPlaces observable array
-            ((place) => { addToMyPlaces(place); })(place);
-        });
+        self.myPlaces().forEach((place) => { mapView.createMarkerMap(place); });
     };
     self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later') };
     self.toggleMenuHandler = () => { toggleOutScreen(listMenu); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
@@ -92,6 +92,7 @@ const ViewModel = function() {
         }
         const place = places.createNewPlace(result.name, result.place_id, result.geometry.location.lat(), result.geometry.location.lng());
         addToMyPlaces(place);
+        mapView.createMarkerMap(place);
     };
 
     self.showPlaceDetail = (placeId) => { placesService.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails); }; //request placesService about details using placeId and open infoWindow
