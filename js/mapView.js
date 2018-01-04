@@ -70,9 +70,6 @@ mapView = (function() {
         animateMarker: function(placeId) {
             bounceMarker(markers[placeId]);
         },
-        stopMarkerAnimation: function() {
-            stopBounceMarker();
-        },
         openInfoWindowWithPlaceDetails: function(objDetail) { //Given a placeDetail, open an infoWindow
             openInfoWindow(markers[objDetail.placeId], getHtmlContent(objDetail));
         },
