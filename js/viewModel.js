@@ -1,13 +1,13 @@
 const ViewModel = function() {
     const self = this;
+    const resetInputNewValue = (str) => { self.inputNewPlaceValue(str); }; //Put value lower input to specific string
     const reorderNumbers = (number) => { //Each time a place is removed, reorder places and markers numbers  
         for (let index = number - 1; index < self.myPlaces().length; index++) {
             place = self.myPlaces()[index];
             place.number--;
-            mapView.changeMarkerLabel(place.placeId, place.number);
+            place.marker.set('label', place.number.toString());
         }
     };
-    const resetInputNewValue = (str) => { self.inputNewPlaceValue(str); }; //Put value lower input to specific string
     const addToMyPlaces = (place) => { //Given a place add it to myPlaces observable array with two new properties number and visibility
         place.number = self.myPlaces().length + 1;
         place.visibility = ko.observable(true);
@@ -28,7 +28,7 @@ const ViewModel = function() {
     self.init = () => {
         const map = mapView.init();
         placesService.init(map);
-        self.myPlaces().forEach((place) => { mapView.createMarkerMap(place); });
+        self.myPlaces().forEach((place) => { place.marker = mapView.createMarkerMap(place); });
     };
     self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later') };
 
@@ -40,17 +40,17 @@ const ViewModel = function() {
             let str = place.name.substr(0, self.inputText().length);
             if (str.toLocaleLowerCase() !== self.inputText().toLocaleLowerCase()) {
                 place.visibility(false);
-                mapView.removeMarkerMap(place.placeId);
+                place.marker.setVisible(false)
             } else {
                 place.visibility(true);
-                mapView.showMarkerMap(place.placeId);
+                place.marker.setVisible(true);
             }
         }
     };
 
     self.removePlaceHandler = (place) => { //Remove a place from myPlaces observable array and remove the marker that reperesents the place from the map
         if (!confirm(`Do you want delete ${place.name}`)) return;
-        mapView.removeMarkerMap(place.placeId);
+        place.marker.setMap(null);
         self.myPlaces.remove((myplace) => { return myplace.placeId === place.placeId; });
         if (self.openPlace() && (self.openPlace().placeId === place.placeId)) self.resetOpenPlaceHandler();
         reorderNumbers(place.number);
@@ -58,8 +58,8 @@ const ViewModel = function() {
 
     self.placeClickHandler = (place) => { //Ask to placesServices for related links and photos(further info) and show update openPlace
         placesService.getMoreInfo(place, (infoObj) => {
-            self.showPlaceDetail(place.placeId);
-            mapView.animateMarker(place.placeId);
+            self.showPlaceDetail(place.marker);
+            mapView.animateMarker(place.marker);
             infoObj.name = place.name;
             infoObj.placeId = place.placeId;
             if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name += ' :Sorry!! No further information found :(';
@@ -88,13 +88,23 @@ const ViewModel = function() {
             window.alert('Please write the place again');
             return;
         }
-        const place = places.createNewPlace(result.name, result.place_id, result.geometry.location.lat(), result.geometry.location.lng());
+        const place = {
+            name: result.name,
+            placeId: result.place_id,
+            location: {
+                lat: result.geometry.location.lat(),
+                lng: result.geometry.location.lng()
+            },
+        };
         addToMyPlaces(place);
-        mapView.createMarkerMap(place);
+        place.marker = mapView.createMarkerMap(place);
     };
 
-    self.showPlaceDetail = (placeId) => { placesService.searchDetail(placeId, mapView.openInfoWindowWithPlaceDetails); }; //request placesService about details using placeId and open infoWindow
-
+    self.showPlaceDetail = (marker) => {
+        placesService.searchDetail(marker.placeId, (objDetail) => {
+            mapView.openInfoWindowWithPlaceDetails(marker, objDetail)
+        });
+    };
 };
 
 placesViewModel = new ViewModel();

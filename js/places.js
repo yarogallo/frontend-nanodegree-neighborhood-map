@@ -71,18 +71,6 @@ places = (function() {
         }
     }];
     return {
-        MY_PLACES: MY_PLACES,
-        createNewPlace: function(name, placeId, lat, lng) { // Create a new place and add it to my places array
-            const place = {
-                name: name,
-                placeId: placeId,
-                location: {
-                    lat: lat,
-                    lng: lng
-                },
-            };
-            MY_PLACES.push(place);
-            return place;
-        }
+        MY_PLACES: MY_PLACES
     };
 })();
