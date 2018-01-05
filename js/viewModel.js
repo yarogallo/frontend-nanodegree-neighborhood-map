@@ -1,7 +1,5 @@
 const ViewModel = function() {
     const self = this;
-    const listMenu = document.getElementById('list-container');
-    const infoContainer = document.getElementById('place-info-container');
     const reorderNumbers = (number) => { //Each time a place is removed, reorder places and markers numbers  
         for (let index = number - 1; index < self.myPlaces().length; index++) {
             place = self.myPlaces()[index];
@@ -15,16 +13,14 @@ const ViewModel = function() {
         place.visibility = ko.observable(true);
         self.myPlaces.push(place);
     };
-    const toggleOutScreen = (elem, doneCallback) => { //Toggle an element in or out of the screen, ejecute callback if there is any
-        window.requestAnimationFrame(() => { elem.classList.toggle('outScreenX'); });
-        if (doneCallback) window.setTimeout(doneCallback, 2000);
-    };
 
     self.myPlaces = ko.observableArray([]); //places to show 
     places.MY_PLACES.forEach(place => { //Add places to myPlaces observable array
         ((place) => { addToMyPlaces(place); })(place);
     });
+    self.visibleMenu = ko.observable(false);
     self.openPlace = ko.observable(); //place was clicked for further information 
+    self.infoContainer = ko.observable(true);
     self.inputText = ko.observable(''); // Upper input text input
     self.inputNewPlaceVisible = ko.observable(false); // Visibility lower input, initial value hidden
     self.inputNewPlaceValue = ko.observable(''); // Lower input value
@@ -35,7 +31,8 @@ const ViewModel = function() {
         self.myPlaces().forEach((place) => { mapView.createMarkerMap(place); });
     };
     self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later') };
-    self.toggleMenuHandler = () => { toggleOutScreen(listMenu); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
+
+    self.toggleMenuHandler = () => { self.visibleMenu(!self.visibleMenu()); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
 
     self.filterPlacesHandler = () => { //Filter places names and markers, each time the user write in the upper input
         for (let index = 0; index < self.myPlaces().length; index++) {
@@ -66,7 +63,7 @@ const ViewModel = function() {
             infoObj.name = place.name;
             infoObj.placeId = place.placeId;
             if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name += ' :Sorry!! No further information found :(';
-            if (!self.openPlace()) toggleOutScreen(infoContainer);
+            if (!self.openPlace()) self.infoContainer(false);
             self.openPlace(infoObj);
         });
     };
@@ -79,9 +76,10 @@ const ViewModel = function() {
     };
 
     self.resetOpenPlaceHandler = () => { //Call toggleOutScreen for Toggle infoContainer in and out of the screen
-        toggleOutScreen(infoContainer, () => {
+        self.infoContainer(true);
+        window.setTimeout(() => {
             self.openPlace(undefined);
-        });
+        }, 1000);
     };
 
     self.createPlace = (result) => { //When add button is clicked a new place is created and to add myPlaces if it is possible

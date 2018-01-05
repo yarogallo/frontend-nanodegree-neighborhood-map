@@ -13,14 +13,14 @@
     <section class="container">
         <header id="map-header" class="row flex background-black">
             <div id="edit-buttom-container" class="col-4 padding-around">
-                <button class="entypo-list background-black pointer animation  big-font" data-bind="click: toggleMenuHandler"></button>
+                <button class="entypo-list background-black pointer animation big-font" data-bind="click: toggleMenuHandler"></button>
             </div>
             <div id="title-container" class="col-8 text-right padding-around">
                 <h1>San Francisco Places</h1>
             </div>
         </header>
         <main id="map-container" class="row relative">
-            <div id="list-container" class="background-black padding-around animation absolute">
+            <div id="list-container" class="background-black padding-around animation absolute" data-bind="css:{outScreenX: visibleMenu}">
                 <form class="flex">
                     <input id="input-place" type="text" placeholder="Places" data-bind="textInput: inputText, event:{keyup: filterPlacesHandler}">
                     <button class="fontawesome-filter input-button text-black"> filter</button>
@@ -40,7 +40,7 @@
                     <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="click: searchValueHandler"> add</button>
                 </form>
             </div>
-            <div id="place-info-container" class="col-6 background-black animation outScreenX absolute" data-bind="with: openPlace">
+            <div id="place-info-container" class="col-6 background-black animation outScreenX absolute" data-bind="with: openPlace, css:{outScreenX: infoContainer}">
                 <header class="flex space-between">
                     <h1 class="margin-left padding-between ">Name: <span data-bind="text: name"></span></h1>
                     <button type="button" class="entypo-cancel background-black pointer margin-right" data-bind="click: $parent.resetOpenPlaceHandler"></button>
