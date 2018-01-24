@@ -58,6 +58,7 @@ const ViewModel = function() {
 
     self.placeClickHandler = (place) => { //Ask to placesServices for related links and photos(further info) and show update openPlace
         placesService.getMoreInfo(place, (infoObj) => {
+            console.log(infoObj);
             self.showPlaceDetail(place.marker);
             mapView.animateMarker(place.marker);
             infoObj.name = place.name;

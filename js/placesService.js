@@ -8,7 +8,7 @@ placesService = (function() {
     const createHashObj = (placeId) => {
         infoHash[placeId] = {
             detail: null,
-            moreInfo: null
+            moreInfo: {}
         };
         return infoHash[placeId];
     };
@@ -26,16 +26,20 @@ placesService = (function() {
         };
     };
 
-    const makeHttpRequest = (url, doneCallback) => {
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState === 4) {
-                doneCallback(this.status, this.responseText);
+    const getRequest = (url) => {
+        return fetch(url).then((response) => {
+            if (response.status !== 200) {
+                console.log('Error Status: ' + response.status);
+                return Promise.reject(null);
             }
-        };
-        xhttp.open("GET", url, true);
-        xhttp.send();
+            return response.json();
+        }).catch(function(err) {
+            console.log('Error: ' + err);
+            return Promise.reject(null);
+        });
     };
+
+
 
     const getFlickerUrl = (placeName, location) => {
         const key = 'd4cd83c196005f3d68c38be13ea02cd2';
@@ -50,10 +54,7 @@ placesService = (function() {
 
     const getUrlPhotos = (response) => { //Using flicker response, create correct url
         const photos = [];
-        const rsp = JSON.parse(response);
-        if (rsp.stat !== 'ok') {
-            return null;
-        }
+        const rsp = response;
         rsp.photos.photo.forEach((photo) => {
             photos.push("http://farm" + photo.farm + ".static.flickr.com/" +
                 photo.server + "/" + photo.id + "_" + photo.secret + "_" + "t.jpg");
@@ -103,20 +104,29 @@ placesService = (function() {
 
         getMoreInfo: function(place, doneCallback) { //Get wiki list of a place related links and flicker related photos, doneCallback when finish
             let obj = infoHash[place.placeId];
-            if (!obj) obj = createHashObj(place.placeId);
-            if (obj.moreInfo) {
+            let wikiUrl = getWikiUrl(place.name);
+            let flickerUrl = getFlickerUrl(place.name, place.location);
+            if (obj) {
                 doneCallback(obj.moreInfo);
                 return;
             }
-            makeHttpRequest(getWikiUrl(place.name), function(status, response) {
-                obj.moreInfo = {};
-                obj.moreInfo.links = status !== 200 ? [] : JSON.parse(response)[3];
-
-                makeHttpRequest(getFlickerUrl(place.name, place.location), function(status, response) {
-                    obj.moreInfo.photosUrl = status !== 200 ? [] : getUrlPhotos(response);
-                    doneCallback(obj.moreInfo);
-                });
-            });
+            obj = createHashObj(place.placeId);
+            getRequest(wikiUrl)
+                .then(response => {
+                    obj.moreInfo.links = response[3];
+                }, err => {
+                    obj.moreInfo.links = [];
+                })
+                .then(
+                    getRequest(flickerUrl)
+                    .then(response => {
+                        obj.moreInfo.photosUrl = getUrlPhotos(response);
+                    }, err => {
+                        obj.moreInfo.photosUrl = [];
+                    }).then(() => {
+                        doneCallback(obj.moreInfo);
+                    })
+                );
         }
     };
 })();

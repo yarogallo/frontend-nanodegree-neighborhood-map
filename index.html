@@ -51,7 +51,7 @@
                         <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="entypo-link padding-bottom truncate"></a>
                     </nav>
                 </div>
-                <div>
+                <div id="photos-container">
                     <p class="margin-left" data-bind="visible: photosUrl.length > 0">Related Photos:</p>
                     <div id="images-container" class="col-12 flex space-around wrap " data-bind="foreach:photosUrl">
                         <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
