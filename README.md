@@ -5,7 +5,7 @@ frontend-nanodegree-neighborhood-map show a list of my favorite places in San Fr
    
 ## Functionalities
 * **Click Place:** Show an infoWindow populated with the selected place basic information available, like phone number, open hours, address etc. 
-* **Click Mrker:** Show an infoWindow populated with the selected marker basic information available, like phone number, open hours, address etc.
+* **Click Marker:** Show an infoWindow populated with the selected marker basic information available, like phone number, open hours, address etc.
 * **Remove Place:** Each place has a cross button associated, click it and remove the place from the list and the corresponding marker from the map.
 * **More Info:** Each place has a lens button associated, click it and see a section with links and photos related with the place.
 * **Filter Places:** Start typing in the upper input and only the places and markers that match the search criteria will be visible.
