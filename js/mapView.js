@@ -62,6 +62,9 @@ mapView = (function() {
         animateMarker: function(marker) {
             bounceMarker(marker);
         },
+        closeInfoWindow: function() {
+            info.close();
+        },
         openInfoWindowWithPlaceDetails: function(marker, objDetail) { //Given a placeDetail, open an infoWindow
             openInfoWindow(marker, getHtmlContent(objDetail));
         }

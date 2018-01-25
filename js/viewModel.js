@@ -35,6 +35,8 @@ const ViewModel = function() {
     self.toggleMenuHandler = () => { self.visibleMenu(!self.visibleMenu()); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
 
     self.filterPlacesHandler = () => { //Filter places names and markers, each time the user write in the upper input
+        mapView.closeInfoWindow();
+        self.infoContainer(true);
         for (let index = 0; index < self.myPlaces().length; index++) {
             let place = self.myPlaces()[index];
             let str = place.name.substr(0, self.inputText().length);
@@ -64,10 +66,8 @@ const ViewModel = function() {
                 if (!response.links.length && !response.photosUrl.length) {
                     response.name += ' :Sorry!! No further information found :(';
                 }
-                if (!self.openPlace()) {
-                    self.infoContainer(false);
-                }
                 self.openPlace(response);
+                self.infoContainer(false);
             });
     };
 
