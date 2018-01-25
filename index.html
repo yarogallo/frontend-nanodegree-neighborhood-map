@@ -7,21 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/normalize.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <script src="js/Knockout.js" defer async></script>
 </head>
 
 <body>
     <section class="container">
         <header id="map-header" class="row flex background-black">
             <div id="edit-buttom-container" class="col-4 padding-around">
-                <button class="entypo-list background-black pointer animation  big-font" data-bind="click: toggleMenuHandler"></button>
+                <button class="entypo-list background-black pointer animation big-font" data-bind="click: toggleMenuHandler"></button>
             </div>
             <div id="title-container" class="col-8 text-right padding-around">
                 <h1>San Francisco Places</h1>
             </div>
         </header>
         <main id="map-container" class="row relative">
-            <div id="list-container" class="background-black padding-around animation absolute">
+            <div id="list-container" class="background-black padding-around animation absolute" data-bind="css:{outScreenX: visibleMenu}">
                 <form class="flex">
                     <input id="input-place" type="text" placeholder="Places" data-bind="textInput: inputText, event:{keyup: filterPlacesHandler}">
                     <button class="fontawesome-filter input-button text-black"> filter</button>
@@ -29,8 +28,7 @@
                 <ul data-bind="foreach: myPlaces">
                     <li class="padding-bottom" data-bind="visible: $data.visibility">
                         <button class="entypo-cancel place-button background-black pointer" data-bind="click: $parent.removePlaceHandler"></button>
-                        <button class="entypo-search place-button background-black pointer" data-bind="click: $parent.showMoreInfoHandler"></button>
-                        <p class="place"><span data-bind="text: $data.name, event: {click: $parent.placeClickHandler, mouseover: $parent.placeMouseoverHandler, mouseout: $parent.placeMouseoutHandler}" class="fontawesome-heart pointer">name</span></p>
+                        <p class="place"><span data-bind="text: $data.name, click:  $parent.placeClickHandler" class="fontawesome-heart pointer">name</span></p>
                     </li>
                 </ul>
                 <div>
@@ -42,7 +40,7 @@
                     <button class="fontawesome-ok-sign pointer input-button text-black" data-bind="click: searchValueHandler"> add</button>
                 </form>
             </div>
-            <div id="place-info-container" class="col-6 background-black animation outScreenX absolute" data-bind="with: openPlace">
+            <div id="place-info-container" class="col-6 background-black animation outScreenX absolute" data-bind="with: openPlace, css:{outScreenX: infoContainer}">
                 <header class="flex space-between">
                     <h1 class="margin-left padding-between ">Name: <span data-bind="text: name"></span></h1>
                     <button type="button" class="entypo-cancel background-black pointer margin-right" data-bind="click: $parent.resetOpenPlaceHandler"></button>
@@ -53,7 +51,7 @@
                         <a href="#" data-bind="text:$data, attr:{href: $data}" target="_blank" class="entypo-link padding-bottom truncate"></a>
                     </nav>
                 </div>
-                <div>
+                <div id="photos-container">
                     <p class="margin-left" data-bind="visible: photosUrl.length > 0">Related Photos:</p>
                     <div id="images-container" class="col-12 flex space-around wrap " data-bind="foreach:photosUrl">
                         <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
@@ -71,11 +69,12 @@
             </div>
         </footer>
     </section>
-    <script src="js/mapView.js" async defer></script>
-    <script src="js/places.js" async defer></script>
-    <script src="js/placesService.js" defer async></script>
+    <script src="js/Knockout.js"></script>
+    <script src="js/mapView.js"></script>
+    <script src="js/places.js"></script>
+    <script src="js/placesService.js"></script>
     <script src="js/viewModel.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBsyTMscA2n2eIKrxaUT5Znow6lMmVqKFk&callback=placesViewModel.init" async defer onerror="placesViewModel.mapErrHandler()"></script>
 
 
 </body>

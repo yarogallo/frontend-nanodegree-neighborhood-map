@@ -4,10 +4,9 @@
 frontend-nanodegree-neighborhood-map show a list of my favorite places in San Francisco, each place have an associated marker located in the full screen map. You can modify the initial list by adding or removing places, you can know information about each place like address, phone number ,related photos etc. Finally you can also filter the list of places leaving visible only the places that match with the search criteria.
    
 ## Functionalities
-* **Click Place:** Show an infoWindow populated with the selected place basic information available, like phone number, open hours, address etc. 
-* **Click Marker:** Show an infoWindow populated with the selected marker basic information available, like phone number, open hours, address etc.
+* **Click Place:** Show an infoWindow populated with the selected place basic information available, like phone number, open hours, address etc and a section with links and photos related with the place.
+* **Click Mrker:** Show an infoWindow populated with the selected marker basic information available, like phone number, open hours, address etc and a section with links and photos related with the place.
 * **Remove Place:** Each place has a cross button associated, click it and remove the place from the list and the corresponding marker from the map.
-* **More Info:** Each place has a lens button associated, click it and see a section with links and photos related with the place.
 * **Filter Places:** Start typing in the upper input and only the places and markers that match the search criteria will be visible.
 * **Add Place:** Click the *Add New Place* button and start typing in the input the name of the place that you want to add.
 
