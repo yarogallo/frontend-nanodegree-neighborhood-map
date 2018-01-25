@@ -8,7 +8,7 @@ placesService = (function() {
     const createHashObj = (placeId) => {
         infoHash[placeId] = {
             detail: null,
-            moreInfo: {}
+            moreInfo: null
         };
         return infoHash[placeId];
     };
@@ -71,62 +71,68 @@ placesService = (function() {
                 placesViewModel.createPlace(autocomplete.getPlace());
             });
         },
-        searchDetail: function(placeId, doneCallback) { //Search place detail using google place api, ejecut doneCallback when finish. 
-            let obj = infoHash[placeId];
-            if (!obj) obj = createHashObj(placeId);
-            if (obj.detail) {
-                doneCallback(obj.detail);
-                return;
-            }
-            service.getDetails({
-                placeId: placeId
-            }, function(result, status) {
-                if (status !== google.maps.places.PlacesServiceStatus.OK) {
-                    doneCallback(undefined);
-                    return;
+        searchDetail: function(placeId) { //Search place detail using google place api, return Promise when finish. 
+            return new Promise((resolve, reject) => {
+                let obj = infoHash[placeId];
+                if (!obj) obj = createHashObj(placeId);
+                if (obj.detail) {
+                    resolve(obj.detail);
                 }
-                obj.detail = setFormat(result);
-                doneCallback(obj.detail);
+                service.getDetails({
+                    placeId: placeId
+                }, (result, status) => {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        reject(null);
+                    }
+                    obj.detail = setFormat(result);
+                    resolve(obj.detail);
+                });
             });
         },
 
-        searchText: function(text, doneCallback) { // Search a place by text using google place api, ejecute doneCallback when finish
-            service.textSearch({
-                query: text
-            }, function(result, status) {
-                if (status !== google.maps.places.PlacesServiceStatus.OK) {
-                    doneCallback(undefined);
-                    return;
-                }
-                doneCallback(result[0]);
+        searchText: function(text) { // Search a place by text using google place api, return Promise when finish
+            return new Promise((resolve, reject) => {
+                service.textSearch({
+                    query: text
+                }, function(result, status) {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        reject(undefined);
+                    }
+                    resolve(result[0]);
+                });
             });
         },
 
-        getMoreInfo: function(place, doneCallback) { //Get wiki list of a place related links and flicker related photos, doneCallback when finish
-            let obj = infoHash[place.placeId];
-            let wikiUrl = getWikiUrl(place.name);
-            let flickerUrl = getFlickerUrl(place.name, place.location);
-            if (obj) {
-                doneCallback(obj.moreInfo);
-                return;
-            }
-            obj = createHashObj(place.placeId);
-            getRequest(wikiUrl)
-                .then(response => {
-                    obj.moreInfo.links = response[3];
-                }, err => {
-                    obj.moreInfo.links = [];
-                })
-                .then(
-                    getRequest(flickerUrl)
-                    .then(response => {
-                        obj.moreInfo.photosUrl = getUrlPhotos(response);
-                    }, err => {
-                        obj.moreInfo.photosUrl = [];
-                    }).then(() => {
-                        doneCallback(obj.moreInfo);
-                    })
-                );
+        getMoreInfo: function(place) { //Get wiki list of a place related links and flicker related photos, return Promise when finish
+            return new Promise((resolve, reject) => {
+                let obj = infoHash[place.placeId] ? infoHash[place.placeId] : createHashObj(place.placeId);
+
+                if (obj.moreInfo) {
+                    resolve(obj.moreInfo);
+                }
+                obj.moreInfo = { name: place.name, placeId: place.placeId };
+
+                getRequest(getWikiUrl(place.name))
+                    .then(
+                        response => {
+                            obj.moreInfo.links = response[3];
+                        },
+                        err => {
+                            obj.moreInfo.links = [];
+                        }
+                    )
+                    .then(
+                        () => {
+                            getRequest(getFlickerUrl(place.name, place.location))
+                                .then(response => {
+                                    obj.moreInfo.photosUrl = getUrlPhotos(response);
+                                }, err => {
+                                    obj.moreInfo.photosUrl = [];
+                                })
+                                .then(() => resolve(obj.moreInfo));
+                        }
+                    );
+            });
         }
     };
 })();

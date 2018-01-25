@@ -3,7 +3,7 @@ const ViewModel = function() {
     const resetInputNewValue = (str) => { self.inputNewPlaceValue(str); }; //Put value lower input to specific string
     const reorderNumbers = (number) => { //Each time a place is removed, reorder places and markers numbers  
         for (let index = number - 1; index < self.myPlaces().length; index++) {
-            place = self.myPlaces()[index];
+            let place = self.myPlaces()[index];
             place.number--;
             place.marker.set('label', place.number.toString());
         }
@@ -30,7 +30,7 @@ const ViewModel = function() {
         placesService.init(map);
         self.myPlaces().forEach((place) => { place.marker = mapView.createMarkerMap(place); });
     };
-    self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later') };
+    self.mapErrHandler = () => { window.alert('Sorry!! We are having problems with Google Maps API, please try later'); };
 
     self.toggleMenuHandler = () => { self.visibleMenu(!self.visibleMenu()); }; //Call toggleOutScreen to toggle listMenu in and out of the screen 
 
@@ -40,7 +40,7 @@ const ViewModel = function() {
             let str = place.name.substr(0, self.inputText().length);
             if (str.toLocaleLowerCase() !== self.inputText().toLocaleLowerCase()) {
                 place.visibility(false);
-                place.marker.setVisible(false)
+                place.marker.setVisible(false);
             } else {
                 place.visibility(true);
                 place.marker.setVisible(true);
@@ -57,23 +57,29 @@ const ViewModel = function() {
     };
 
     self.placeClickHandler = (place) => { //Ask to placesServices for related links and photos(further info) and show update openPlace
-        placesService.getMoreInfo(place, (infoObj) => {
-            console.log(infoObj);
-            self.showPlaceDetail(place.marker);
-            mapView.animateMarker(place.marker);
-            infoObj.name = place.name;
-            infoObj.placeId = place.placeId;
-            if (!infoObj.links.length && !infoObj.photosUrl.length) infoObj.name += ' :Sorry!! No further information found :(';
-            if (!self.openPlace()) self.infoContainer(false);
-            self.openPlace(infoObj);
-        });
+        self.showPlaceDetail(place.marker);
+        mapView.animateMarker(place.marker);
+        placesService
+            .getMoreInfo(place).then(response => {
+                if (!response.links.length && !response.photosUrl.length) {
+                    response.name += ' :Sorry!! No further information found :(';
+                }
+                if (!self.openPlace()) {
+                    self.infoContainer(false);
+                }
+                self.openPlace(response);
+            });
     };
 
-    self.toggleInputHandler = () => { self.inputNewPlaceVisible(!self.inputNewPlaceVisible()); }; //Change inputNewPlaceVisible value, switch lower input visibility
+    // Change inputNewPlaceVisible value, switch lower input visibility
+    self.toggleInputHandler = () => {
+        self.inputNewPlaceVisible(!self.inputNewPlaceVisible());
+    };
 
     self.searchValueHandler = () => { // If the user do no pick a place from the autocomplete, this handle when add button is pressed
         if (!self.inputNewPlaceValue()) return;
-        placesService.searchText(self.inputNewPlaceValue(), self.createPlace);
+        placesService.searchText(self.inputNewPlaceValue())
+            .then(response => { self.createPlace(response); }, err => { window.alert('Please write the place again'); });
     };
 
     self.resetOpenPlaceHandler = () => { //Call toggleOutScreen for Toggle infoContainer in and out of the screen
@@ -85,10 +91,6 @@ const ViewModel = function() {
 
     self.createPlace = (result) => { //When add button is clicked a new place is created and to add myPlaces if it is possible
         resetInputNewValue('');
-        if (!result) {
-            window.alert('Please write the place again');
-            return;
-        }
         const place = {
             name: result.name,
             placeId: result.place_id,
@@ -102,9 +104,7 @@ const ViewModel = function() {
     };
 
     self.showPlaceDetail = (marker) => {
-        placesService.searchDetail(marker.placeId, (objDetail) => {
-            mapView.openInfoWindowWithPlaceDetails(marker, objDetail)
-        });
+        placesService.searchDetail(marker.placeId).then((objDetail) => { mapView.openInfoWindowWithPlaceDetails(marker, objDetail); });
     };
 };
 
