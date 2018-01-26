@@ -39,8 +39,9 @@ const ViewModel = function() {
         self.infoContainer(true);
         for (let index = 0; index < self.myPlaces().length; index++) {
             let place = self.myPlaces()[index];
-            let str = place.name.substr(0, self.inputText().length);
-            if (str.toLocaleLowerCase() !== self.inputText().toLocaleLowerCase()) {
+            let currentInputText = self.inputText().toLocaleLowerCase();
+            let str = place.name.substr(0, currentInputText.length);
+            if (!str.toLocaleLowerCase().includes(currentInputText)) {
                 place.visibility(false);
                 place.marker.setVisible(false);
             } else {
