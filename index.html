@@ -53,8 +53,8 @@
                 </div>
                 <div id="photos-container">
                     <p class="margin-left" data-bind="visible: photosUrl.length > 0">Related Photos:</p>
-                    <div id="images-container" class="col-12 flex space-around wrap " data-bind="foreach:photosUrl">
-                        <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-bottom">
+                    <div id="images-container" class="col-12 flex space-around " data-bind="foreach:photosUrl">
+                        <img src="#" alt="flicker photo" data-bind="attr:{src: $data}" class="flicker-photo padding-around">
                     </div>
                 </div>
             </div>

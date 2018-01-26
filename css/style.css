@@ -44,13 +44,22 @@ footer {
 }
 
 #list-container {
+    height: 60%;
+    overflow: auto;
     z-index: 2;
     top: 0;
 }
 
 #place-info-container {
+    height: 35%;
+    overflow: auto;
     z-index: 3;
     bottom: 0;
+}
+
+#photos-container {
+    width: 100%;
+    overflow-x: scroll;
 }
 
 #map-container {
