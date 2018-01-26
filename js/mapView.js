@@ -21,16 +21,11 @@ mapView = (function() {
             </div>`;
     };
 
-    const stopBounceMarker = () => { // Stop marker that is bouncing
-        if (!openMarker) return;
-        openMarker.setAnimation(null);
-        openMarker = null;
-    };
-
     const bounceMarker = (marker) => {
-        if (openMarker) stopBounceMarker();
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        openMarker = marker;
+        window.setTimeout(() => {
+            marker.setAnimation(null);
+        }, 800);
     };
 
     return {
@@ -41,7 +36,6 @@ mapView = (function() {
                 streetViewControl: false
             });
             info = new google.maps.InfoWindow();
-            info.addListener("closeclick", stopBounceMarker); //When infoWindow is closed, stop bouncing the asociated marker
             return map;
         },
         createMarkerMap: function(place) { //Given a place, create a marker if it doesn't exist
