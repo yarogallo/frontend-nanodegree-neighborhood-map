@@ -49,7 +49,7 @@ placesService = (function() {
     };
 
     const getWikiUrl = (placeName) => {
-        return `https://en.wikipedia.org//w/api.php?action=opensearch&format=json&origin=*&search=${placeName}&limit=5`;
+        return `https://en.wikipedia.org//w/api.php?action=opensearch&format=json&origin=*&search=${placeName}&limit=3`;
     };
 
     const getUrlPhotos = (response) => { //Using flicker response, create correct url
