@@ -12,12 +12,12 @@ mapView = (function() {
     const getHtmlContent = (objDetail) => { //Generate content to show in the infoWindow
         if (!objDetail) return `<div><h3>an error has occurred</h3></div>`;
         return `<div class="infoContent text-black" >
-            <div><p class="fontawesome-heart"><strong>Name:</strong>${objDetail.name} </p></div>
-            <div><p class="fontawesome-map-marker"><strong>Address: </strong>${objDetail.address} </p></div>
-            <div><p class="fontawesome-phone"><strong>Phone number: </strong>${objDetail.phoneNumber} </p></li>
-            <div><p><strong class="fontawesome-thumbs-up">Raiting: </strong>${objDetail.rating} </p></div>
-            <div><p><strong class="fontawesome-link" target="_blank">Url: </strong><a href="${objDetail.url}">Find me here</a></p></li>
-            <div><p class="fontawesome-calendar"><strong>Open Now: </strong>${objDetail.openNow}</p></div>
+            <div><p><i class="fas fa-heart"></i><strong>Name:</strong>${objDetail.name} </p></div>
+            <div><p><i class="fas fa-map-marker-alt"></i><strong>Address: </strong>${objDetail.address} </p></div>
+            <div><p><i class="fas fa-phone"></i><strong>Phone number: </strong>${objDetail.phoneNumber} </p></li>
+            <div><p><i class="fas fa-thumbs-up"></i><strong>Raiting: </strong>${objDetail.rating} </p></div>
+            <div><p><i class="fas fa-link"></i><strong target="_blank">Url: </strong><a href="${objDetail.url}">Find me here</a></p></li>
+            <div><p><i class="far fa-calendar-alt"></i><strong>Open Now: </strong>${objDetail.openNow}</p></div>
             </div>`;
     };
 
@@ -44,7 +44,6 @@ mapView = (function() {
                 animation: google.maps.Animation.DROP,
                 placeId: place.placeId,
                 label: place.number.toString(),
-                icon: "images/hearts.svg",
                 map: map
             });
             marker.addListener('click', function() {
