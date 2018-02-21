@@ -69,6 +69,7 @@ const ViewModel = function() {
                 }
                 self.openPlace(response);
                 self.infoContainer(false);
+                self.visibleMenu(true);
             });
     };
 
@@ -85,6 +86,7 @@ const ViewModel = function() {
 
     self.resetOpenPlaceHandler = () => { //Call toggleOutScreen for Toggle infoContainer in and out of the screen
         self.infoContainer(true);
+        self.toggleMenuHandler();
         window.setTimeout(() => {
             self.openPlace(undefined);
         }, 1000);

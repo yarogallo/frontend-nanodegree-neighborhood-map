@@ -45,7 +45,7 @@ placesService = (function() {
         const key = 'd4cd83c196005f3d68c38be13ea02cd2';
         const lat = location.lat;
         const lon = location.lng;
-        return `https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=${key}&per_page=6&nojsoncallback=1&lat=${lat}&lon=${lon}&tags=${placeName} `;
+        return `https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=${key}&per_page=20&nojsoncallback=1&lat=${lat}&lon=${lon}&tags=${placeName} `;
     };
 
     const getWikiUrl = (placeName) => {
