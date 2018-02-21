@@ -1,0 +1,33 @@
+{
+    "name": "frontend-nanodegree-neighborhood-map",
+    "version": "1.0.0",
+    "description": "## Description frontend-nanodegree-neighborhood-map show a list of my favorite places in San Francisco, each place have an associated marker located in the full screen map. You can modify the initial list by adding or removing places, you can know information about each place like address, phone number ,related photos etc. Finally you can also filter the list of places leaving visible only the places that match with the search criteria.",
+    "main": "Gruntfile.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yarogallo/frontend-nanodegree-neighborhood-map.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/yarogallo/frontend-nanodegree-neighborhood-map/issues"
+    },
+    "homepage": "https://github.com/yarogallo/frontend-nanodegree-neighborhood-map#readme",
+    "dependencies": {
+        "grunt": "^1.0.2"
+
+    },
+    "devDependencies": {
+        "grunt-concat-css": "^0.3.2",
+        "grunt-contrib-clean": "^1.1.0",
+        "grunt-contrib-cssmin": "^2.2.1",
+        "grunt-contrib-uglify-es": "^3.3.0",
+        "grunt-mkdir": "^1.0.0",
+        "grunt-processhtml": "^0.4.1",
+        "grunt-contrib-concat": "^1.0.1"
+    }
+}
