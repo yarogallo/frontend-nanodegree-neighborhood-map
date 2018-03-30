@@ -81,6 +81,10 @@ footer {
     left: 0;
 }
 
+.fixed {
+    position: fixed;
+}
+
 .animation {
     -webkit-transition: transform 1s;
     -moz-transition: transform 1s;
@@ -198,6 +202,7 @@ footer {
 
 .infoContent {
     font-family: 'sans-serif';
+    width: 250px;
 }
 
 .pointer:hover {
